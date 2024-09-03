@@ -184,14 +184,7 @@ public class DefaultDto {
         private String sdate;
         @Schema(description = "fdate", example="")
         private String fdate;
-    }
-    @SuperBuilder
-    @Schema
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class PagedListServDto extends PagedListReqDto {
+
         @Schema(description = "offset", example="")
         private Integer offset;
 
@@ -233,6 +226,56 @@ public class DefaultDto {
                     .list(list)
                     .build();
         }
+    }
+    @SuperBuilder
+    @Schema
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PagedListServDto extends PagedListReqDto {
+        private String aaa;
+        /*@Schema(description = "offset", example="")
+        private Integer offset;
+
+        public int[] init(int listsize){
+            if(getOrderby() == null || getOrderby().isEmpty()){
+                setOrderby("created_at");
+            }
+            if(getOrderway() == null || getOrderway().isEmpty()){
+                setOrderway("desc");
+            }
+            if(getPerpage() == null || getPerpage()  < 1){
+                //한번에 조회할 글 갯수
+                setPerpage(10);
+            }
+            if(getCallpage() == null || getCallpage() < 1){
+                //호출하는 페이지
+                setCallpage(1);
+            }
+
+            int pagesize = listsize / getPerpage();
+            if(listsize % getPerpage() > 0){
+                pagesize++;
+            }
+            if(getCallpage() > pagesize){
+                setCallpage(pagesize);
+            }
+            offset = (getCallpage() - 1) * getPerpage();
+            int[] res = {listsize, pagesize};
+            return res;
+        }
+        public PagedListResDto afterBuild(int[] resSize, Object list){
+            return PagedListResDto.builder()
+                    .callpage(getCallpage())
+                    .perpage(getPerpage())
+                    .orderby(getOrderby())
+                    .orderway(getOrderway())
+                    .listsize(resSize[0])
+                    .pagesize(resSize[1])
+                    .list(list)
+                    .build();
+        }*/
     }
 
     @SuperBuilder

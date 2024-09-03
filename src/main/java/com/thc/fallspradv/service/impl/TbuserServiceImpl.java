@@ -197,12 +197,7 @@ public class TbuserServiceImpl implements TbuserService {
     }
 
     @Override
-    public TbuserDto.DetailResDto detail(DefaultDto.DetailServDto param){
-        //내 정보 요청하는 경우!
-        if("my".equals(param.getId())){
-            param.setId(param.getReqTbuserId());
-        }
-
+    public TbuserDto.DetailResDto detail(DefaultDto.DetailReqDto param){
         TbuserDto.DetailResDto selectResDto = tbuserMapper.detail(param);
         if(selectResDto == null){ throw new RuntimeException("no data"); }
         return selectResDto;

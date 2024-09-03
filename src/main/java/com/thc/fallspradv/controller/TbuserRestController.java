@@ -156,9 +156,7 @@ public class TbuserRestController {
     )
     @GetMapping("")
     public ResponseEntity<TbuserDto.DetailResDto> detail(@Valid DefaultDto.DetailReqDto param, HttpServletRequest request){
-        String reqTbuserId = request.getAttribute("reqTbuserId") + "";
-        DefaultDto.DetailServDto newParam = DefaultDto.DetailServDto.builder().id(param.getId()).reqTbuserId(reqTbuserId).build();
-        return ResponseEntity.status(HttpStatus.OK).body(tbuserService.detail(newParam));
+        return ResponseEntity.status(HttpStatus.OK).body(tbuserService.detail(param));
     }
     @Operation(summary = "사용자 목록 전체 조회",
             description = "사용자 목록 전체 조회 컨트롤러 <br />"

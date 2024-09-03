@@ -10,231 +10,20 @@
 </head>
 <body>
 
-<script id="list_info_tbpostfile" type="text/x-handlebars-template">
-    {{#resultData_tbpostfile}}
-    <div id="div_tbpostfile_{{id}}">
-        <img height="50px" src="{{url}}" alt=""/>
-        <input type="text" class="create_tbpost_img_id" value="{{id}}"/>
-        <input type="text" class="create_tbpost_img_type" value="{{type}}"/>
-        <input type="text" class="create_tbpost_img_url" value="{{url}}"/>
-        <button onclick="listener_remove_img('{{id}}')">삭제</button>
-    </div>
-    {{/resultData_tbpostfile}}
-</script>
-<script type="text/javascript">
-    var list_info_tbpostfile = $("#list_info_tbpostfile").html();
-    var list_info_tbpostfile_template = Handlebars.compile(list_info_tbpostfile);
-</script>
-
-<script id="list_info_tbpostcmt" type="text/x-handlebars-template">
-    {{#resultData_tbpostcmt}}
-    <div id="div_tbpostcmt_{{id}}">
-        {{content}}
-        <button onclick="delete_tbpostcmt('{{id}}')">삭제</button>
-        <input type="hidden" class="input_tbpostcmt_created_at" value="{{createdAt}}"/>
-    </div>
-    {{/resultData_tbpostcmt}}
-</script>
-<script type="text/javascript">
-    var list_info_tbpostcmt = $("#list_info_tbpostcmt").html();
-    var list_info_tbpostcmt_template = Handlebars.compile(list_info_tbpostcmt);
-</script>
-
 id :
 <input id="detail_tbpost_id" type="text" readonly/>
 title :
 <input id="detail_tbpost_title" type="text" />
-tbuserId :
-<input id="detail_tbpost_tbuserId" type="text" />
-
-tbuserNick : <font class="font_tbpost_tbuserNick"></font>
 content :
 <input id="detail_tbpost_content" type="text" />
+author :
+<input id="detail_tbpost_author" type="text" />
 
 <!--<img id="detail_tbpost_content_img" alt="123"/>
 <a id="detail_tbpost_content_file" href="">다운로드</a>-->
 
 <button onclick="detail_tbpost()">detail</button>
 <button onclick="update_tbpost()">update</button>
-<br/>
-<br/>
-<button onclick="$('#create_tbpost_img').trigger('click')">img upload</button>
-<label for="create_tbpost_img">이미지 추가.</label>
-<input type="file" id="create_tbpost_img" onchange="readURLFile(this)" accept="image/*" />
-
-<div id="tbody_tbpostcmt_list">
-
-</div>
-
-좋아요 <font class="font_tbpost_liked">-</font>:
-<input type="checkbox" id="detail_tbpost_liked" onchange="toggle_tbpostlike()"/>
-
-<!--<button onclick="toggle_tbpostlike()">like</button>-->
-
-댓글 :
-<input id="create_tbpostcmt_content" type="text" />
-<button onclick="create_tbpostcmt()">create</button>
-
-<div id="div_create_tbpost_imgs">
-
-</div>
-
-<script>
-    function mlist_tbpostcmt(){
-
-        let cursor = "";
-        let input_tbpostcmt_data_cursor = null;
-        input_tbpostcmt_data_cursor = $(".input_tbpostcmt_created_at");
-        if(input_tbpostcmt_data_cursor != null && input_tbpostcmt_data_cursor.length > 0){
-            cursor = $(input_tbpostcmt_data_cursor[input_tbpostcmt_data_cursor.length - 1]).val();
-        }
-
-        $("#search_tbpostcmt_cursor").val(cursor);
-
-        $.ajax({
-            url: "/api/tbpostcmt/mlist",
-            type: "GET",
-            contentType : 'application/json; charset=utf-8',
-            data: {
-                deleted : $("#detail_tbpostcmt_deleted").val()
-                , perpage : 10
-                , cursor : $("#search_tbpostcmt_cursor").val()
-                , tbpostId: $("#detail_tbpost_id").val()
-            },
-            cache: false,
-            success: (data, status, xhr)=>{
-                //alert("success!!");
-                //alert(JSON.stringify(data));
-                let a_list = data;
-                $("#tbody_tbpostcmt_list").append(list_info_tbpostcmt_template({"resultData_tbpostcmt":a_list}));
-            },
-            error: (data, status, xhr)=>{
-                alert("error!!");
-                alert(JSON.stringify(data));
-            }
-        });
-    }
-    function delete_tbpostcmt(id) {
-        $.ajax({
-            url: "/api/tbpostcmt",
-            type: "DELETE",
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify({
-                id: id
-            }),
-            cache: false,
-            success: (data, status, xhr) => {
-                alert("success!!");
-                $("#div_tbpostcmt_" + id).remove();
-            },
-            error: (data, status, xhr) => {
-                alert("error!!");
-                alert(JSON.stringify(data));
-            }
-        });
-    }
-</script>
-<script>
-    let limit_each_file_size = 10;
-    function readURLFile(input) {
-        let temp_id = $(input).attr("id") + "";
-        if (input.files && input.files[0]) {
-            let reader = new FileReader();
-            reader.readAsDataURL(input.files[0]);
-            reader.onload = function(e) {
-                let temp_each_file_size = input.files[0].size / (1024 * 1024);
-                if (temp_each_file_size > limit_each_file_size) {
-                    alert("파일 1개 당 " + limit_each_file_size + "mb 용량 제한 초과 입니다!");
-                    $(input).val("");
-                    return false;
-                }
-                let file_type = "image";
-                if (!input.files[0].type.match('image.*')) {
-                    file_type = "file";
-                } else {
-                    file_type = "image";
-                }
-                //alert(input.files[0].name);
-                listener_upload_file(input.files[0], file_type);
-            }
-        }
-    }
-    function listener_upload_file(obj_file, file_type) {
-        let fileData = new FormData();
-        fileData.append("file", obj_file);
-
-        $.ajax({
-            url: "/api/default/uploadFile",
-            type: "POST",
-            data: fileData ,
-            cache : false,
-            contentType : false,
-            processData : false,
-            success: (data, status, xhr)=>{
-                //alert(xhr.status);
-                switch(xhr.status){
-                    case 201:
-                        create_tbpostfile(file_type, data["url"]);
-                        break;
-                    default:
-                        console.log("no matching status code");
-                }
-            },
-            error: (data)=>{
-                alert("error")
-            },
-        });
-    }
-    function listener_remove_img(obj_id){
-        delete_tbpostfile(obj_id);
-    }
-    function delete_tbpostfile(id) {
-        $.ajax({
-            url: "/api/tbpostfile",
-            type: "DELETE",
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify({
-                id: id
-            }),
-            cache: false,
-            success: (data, status, xhr) => {
-                alert("success!!");
-                $("#div_tbpostfile_" + id).remove();
-            },
-            error: (data, status, xhr) => {
-                alert("error!!");
-                alert(JSON.stringify(data));
-            }
-        });
-    }
-    function create_tbpostfile(type, url) {
-        $.ajax({
-            url: "/api/tbpostfile",
-            type: "POST",
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify({
-                tbpostId: $("#detail_tbpost_id").val()
-                , type: type
-                , url: url
-            }),
-            cache: false,
-            success: (obj_data, status, xhr) => {
-                //alert("success!!");
-                let a_list = [];
-                let each_data = {};
-                a_list.push(each_data);
-                each_data["id"] = obj_data["id"];
-                each_data["type"] = type;
-                each_data["url"] = url;
-                $("#div_create_tbpost_imgs").prepend(list_info_tbpostfile_template({"resultData_tbpostfile":a_list}));
-            },
-            error: (data, status, xhr) => {
-                alert("error!!");
-                alert(JSON.stringify(data));
-            }
-        });
-    }
-</script>
 
 <script>
     $( document ).ready(function() {
@@ -264,15 +53,9 @@ content :
             contentType : 'application/json; charset=utf-8',
             data: {
                 id : getIdFromUrl(null)
-                ,tbuserId : localStorage.getItem("myTbuserId")
             },
             cache: false,
             success: (obj_data, status, xhr)=>{
-                //alert(obj_data["liked"]);
-                //alert(JSON.stringify(obj_data));
-
-                /*<input type="text" id="detail_tbpost_title" />*/
-
                 let detailKeys = Object.keys(obj_data);
                 for (let eachKey of detailKeys){
                     let tempType = $("#detail_tbpost_" + eachKey).attr("type");
@@ -281,19 +64,8 @@ content :
                     } else {
                         $("#detail_tbpost_" + eachKey).val(obj_data[eachKey]);
                     }
-
                     $(".font_tbpost_" + eachKey).text(obj_data[eachKey]);
                 }
-
-                let a_list = obj_data["tbpostfiles"];
-                $("#div_create_tbpost_imgs").append(list_info_tbpostfile_template({"resultData_tbpostfile":a_list}));
-
-                mlist_tbpostcmt();
-/*
-                let download_file = data["content"];
-                download_file = download_file.replace("/uploadfile/", "");
-                download_file = "/download/" + download_file;
-                $("#detail_tbpost_content_file").attr("href", download_file);*/
             },
             error: (data, status, xhr)=>{
                 alert("error!!");
@@ -314,80 +86,13 @@ content :
             data: JSON.stringify({
                 id : $("#detail_tbpost_id").val()
                 ,title : $("#detail_tbpost_title").val()
-                ,tbuserId : $("#detail_tbpost_tbuserId").val()
                 ,content : $("#detail_tbpost_content").val()
+                ,author : $("#detail_tbpost_author").val()
             }),
             cache: false,
             success: (data, status, xhr)=>{
                 //alert("success!!");
                 alert(JSON.stringify(data));
-            },
-            error: (data, status, xhr)=>{
-                alert("error!!");
-                alert(JSON.stringify(data));
-            }
-        });
-    }
-
-    function create_tbpostcmt(){
-
-        let tbuserId = localStorage.getItem("myTbuserId");
-        if (tbuserId == null || tbuserId === "") {
-            alert("로그인 이전입니다!!");
-            return false;
-        }
-
-        $.ajax({
-            url: "/api/tbpostcmt",
-            type: "POST",
-            contentType : 'application/json; charset=utf-8',
-            data: JSON.stringify({
-                tbpostId: $("#detail_tbpost_id").val()
-                ,tbuserId : tbuserId
-                ,content : $("#create_tbpostcmt_content").val()
-            }),
-            cache: false,
-            success: (data, status, xhr)=>{
-                //alert("success!!");
-                alert(JSON.stringify(data));
-            },
-            error: (data, status, xhr)=>{
-                alert("error!!");
-                alert(JSON.stringify(data));
-            }
-        });
-    }
-    function toggle_tbpostlike(){
-
-        let tbuserId = localStorage.getItem("myTbuserId");
-        if (tbuserId == null || tbuserId === "") {
-            alert("로그인 이전입니다!!");
-            return false;
-        }
-
-        $.ajax({
-            url: "/api/tbpostlike/toggle",
-            type: "POST",
-            contentType : 'application/json; charset=utf-8',
-            data: JSON.stringify({
-                tbpostId: $("#detail_tbpost_id").val()
-                ,tbuserId : tbuserId
-            }),
-            cache: false,
-            success: (data, status, xhr)=>{
-                //alert("success!!");
-                //alert(JSON.stringify(data));
-
-                //$("#detail_tbpost_liked").prop("checked", !(data["id"] === "success"));
-                if(data["id"] === "success"){
-                    //alert("좋아요 취소!");
-                    $(".font_tbpost_liked").text(false);
-                    $("#detail_tbpost_liked").prop("checked", false);
-
-                } else {
-                    $(".font_tbpost_liked").text(true);
-                    $("#detail_tbpost_liked").prop("checked", true);
-                }
             },
             error: (data, status, xhr)=>{
                 alert("error!!");
