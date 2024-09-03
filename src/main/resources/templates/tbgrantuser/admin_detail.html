@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <head th:replace="~{@{includes/admin/head}}"></head>
+</head>
+<body>
+
+<div id="wrapper">
+    <body th:replace="~{@{includes/admin/nav}}"></body>
+    <script>
+        $(".sidemenu_li_tbgrant").addClass("active");
+    </script>
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <body th:replace="~{@{includes/admin/navbar_top}}"></body>
+        <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-lg-10">
+                <h2>접근권한 사용자 상세 : <font class="font_tbgrantuser_tbuserNick"></font></h2>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/admin">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/tbgrantuser/admin_list">권한 관련</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/tbgrantuser/admin_list">접근권한 목록</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="javascript:location_href_path_param('/tbgrant/admin_detail/', getIdFromUrl(null))">접근권한(<font class="font_tbgrant_title"></font>) 상세</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <strong>접근권한(<font class="font_tbgrant_title"></font>) 사용자 상세</strong>
+                    </li>
+                </ol>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+
+        <div class="animated fadeInRight" style="padding-top:12.5px;padding-bottom:0px;">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox-title">
+                        <h5>#<font class="font_tbgrantuser_id">-</font></h5>
+                    </div>
+                    <div class="ibox-content" style="padding-bottom:0.1px;">
+                        <input type="hidden" id="detail_tbgrantuser_tbgrantId" value="" />
+                        <input type="hidden" id="detail_tbgrantuser_id" value="" />
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">삭제여부</label>
+                            <div class="col-sm-4">
+                                <select class="form-control m-b" id="detail_tbgrantuser_deleted" keyword="deleted" onchange="update_tbgrantuser(this)">
+                                    <option value="N">일반</option>
+                                    <option value="Y">삭제</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-6"></label>
+
+                            <label class="col-sm-2 col-form-label">*사용자ID</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control m-b" id="detail_tbgrantuser_tbuserId" keyword="tbuserId" placeholder="내용을 입력하세요" readonly="readonly" />
+                            </div>
+                            <label class="col-sm-2 col-form-label">*사용자이름</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control m-b" id="detail_tbgrantuser_tbuserName" keyword="tbuserName" placeholder="내용을 입력하세요" readonly="readonly" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $( document ).ready(function() {
+                console.log( "ready!" );
+                detail_tbgrantuser();
+            });
+            function detail_tbgrant(){
+                let tbgrantId = $("#detail_tbgrantuser_tbgrantId").val();
+                let _data = new Map();
+                _data.url = "/api/tbgrant";
+                _data.type = "GET";
+                _data.param = {'id':tbgrantId};
+                _data.success = function(obj_data, obj_status, obj_xhr){
+                    //alert(JSON.stringify(obj_data));
+                    let detailKeys = Object.keys(obj_data)
+                    for (let eachKey of detailKeys){
+                        $(".font_tbgrant_" + eachKey).text(obj_data[eachKey]);
+                        $("#detail_tbgrant_" + eachKey).val(obj_data[eachKey]);
+                        $("#img_tbgrant_" + eachKey).attr("src", obj_data[eachKey]);
+                    }
+                }
+                _data.error = function(obj_data, obj_status, obj_xhr){
+                    alert("정상적으로 이루어지지 않았습니다. 다시 시도해주세요.");
+                }
+                func_ajax(_data);
+            }
+            function detail_tbgrantuser(){
+                let tbgrantuserId = getIdFromUrl(null);
+                let _data = new Map();
+                _data.url = "/api/tbgrantuser";
+                _data.type = "GET";
+                _data.param = {'id':tbgrantuserId};
+                _data.success = function(obj_data, obj_status, obj_xhr){
+                    //alert(JSON.stringify(obj_data));
+                    let detailKeys = Object.keys(obj_data)
+                    for (let eachKey of detailKeys){
+                        $(".font_tbgrantuser_" + eachKey).text(obj_data[eachKey]);
+                        $("#detail_tbgrantuser_" + eachKey).val(obj_data[eachKey]);
+                        $("#img_tbgrantuser_" + eachKey).attr("src", obj_data[eachKey]);
+                    }
+                    detail_tbgrant();
+                }
+                _data.error = function(obj_data, obj_status, obj_xhr){
+                    alert("정상적으로 이루어지지 않았습니다. 다시 시도해주세요.");
+                }
+                func_ajax(_data);
+            }
+            function update_tbgrantuser(obj){
+                let _param = {};
+                _param["id"] = $("#detail_tbgrantuser_id").val();
+                _param[$(obj).attr("keyword")] = $(obj).val();
+                //alert(_param[$(obj).attr("keyword")]);
+
+                let _data = new Map();
+                _data.url = "/api/tbgrantuser";
+                _data.type = "PUT";
+                _data.param = _param;
+                _data.success = function(obj_data, obj_status, obj_xhr){
+                    //alert("수정되었습니다.");
+                }
+                _data.error = function(obj_data, obj_status, obj_xhr){
+                    alert("정상적으로 이루어지지 않았습니다. 다시 시도해주세요.");
+                }
+                func_ajax(_data);
+            }
+        </script>
+        <body th:replace="~{@{includes/admin/footer}}"></body>
+    </div>
+    <body th:replace="~{@{includes/admin/right_sidebar}}"></body>
+</div>
+<body th:replace="~{@{includes/admin/bottom}}"></body>
+</body>
+</html>

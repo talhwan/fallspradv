@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <head th:replace="~{@{includes/admin/head}}"></head>
+</head>
+<body>
+
+<div id="wrapper">
+    <body th:replace="~{@{includes/admin/nav}}"></body>
+    <script>
+        $(".sidemenu_li_tbgrant").addClass("active");
+    </script>
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <body th:replace="~{@{includes/admin/navbar_top}}"></body>
+        <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-lg-10">
+                <h2>접근권한 신규</h2>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/admin">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/tbgrant/admin_list">권한 관련</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/tbgrant/admin_list">접근권한 목록</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <strong>접근권한 신규</strong>
+                    </li>
+                </ol>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+
+        <div class="animated fadeInRight" style="padding-top:12.5px;padding-bottom:0px;">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox-title">
+                        <h5>신규 등록</h5>
+                    </div>
+                    <div class="ibox-content" style="padding-bottom:0.1px;">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">*구분</label>
+                            <div class="col-sm-4">
+                                <select class="input_required form-control m-b" id="create_tbgrant_cate" keyword="cate">
+                                    <option value="top">최고관리자</option>
+                                    <option value="middle">중간관리자</option>
+                                    <option value="normal">일반관리자</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-6"></label>
+
+                            <label class="col-sm-2 col-form-label">*제목</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="input_required form-control m-b" id="create_tbgrant_title" keyword="title" placeholder="내용을 입력하세요" errormsg="필수값입니다."/>
+                            </div>
+                            <label class="col-sm-6"></label>
+
+                            <label class="col-sm-2 col-form-label">내용</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control m-b" id="create_tbgrant_content" keyword="content" onchange="listener_maxlength_check(this, 2000);" rows="4" placeholder="내용을 입력하세요"></textarea>
+                            </div>
+                        </div>
+                        <div class="m-b" style="text-align: right;">
+                            <button class="btn btn-primary btn-sm" onclick="create_tbgrant()">등록하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $( document ).ready(function() {
+                console.log( "ready!" );
+                //create_tbgrant();
+            });
+            function create_tbgrant(){
+                if(!listenerBeforeCreate()){
+                    return false;
+                }
+                let _param = {
+                    'title' : $("#create_tbgrant_title").val(),
+                    'cate' : $("#create_tbgrant_cate").val(),
+                    'content' : $("#create_tbgrant_content").val()
+                };
+
+                let _data = new Map();
+                _data.url = "/api/tbgrant";
+                _data.type = "POST";
+                _data.param = _param;
+                _data.success = function(obj_data, obj_status, obj_xhr){
+                    alert("등록");
+                    location.reload();
+                }
+                _data.error = function(obj_data, obj_status, obj_xhr){
+                    alert("정상적으로 이루어지지 않았습니다. 다시 시도해주세요.");
+                }
+                func_ajax(_data);
+            }
+        </script>
+        <body th:replace="~{@{includes/admin/footer}}"></body>
+    </div>
+    <body th:replace="~{@{includes/admin/right_sidebar}}"></body>
+</div>
+<body th:replace="~{@{includes/admin/bottom}}"></body>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+username :
+<input type="text" id="create_tbuser_username" />
+password :
+<input type="text" id="create_tbuser_password" />
+
+<button onclick="login()">login</button>
+<button onclick="generateAccessToken()">accessToken</button>
+<!--<div>
+refreshToken :
+<input type="text" id="detail_tbuser_refreshToken" />
+accessToken :
+<input type="text" id="detail_tbuser_accessToken" />
+</div>-->
+
+<!--<button onclick="generateAccessToken()">generateAccessToken</button>-->
+<!--<button onclick="accessTokenTest()">accessTokenTest</button>-->
+
+
+<script>
+    function login(){
+        $.ajax({
+            //url: "/api/tbuser/login",
+            url: "/api/login",
+            type: "POST",
+            contentType : 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                username : $("#create_tbuser_username").val()
+                ,password : $("#create_tbuser_password").val()
+            }),
+            cache: false,
+            success: (obj_data, status, xhr)=>{
+                if(obj_data["id"] === "not matched"){
+                    alert("아이디와 비밀번호가 올바르지 않습니다.");
+                } else {
+                    alert(JSON.stringify(obj_data));
+
+                    let refreshToken = xhr.getResponseHeader("RefreshToken");
+                    let accessToken = xhr.getResponseHeader("Authorization");
+                    alert(refreshToken);
+                    alert(accessToken);
+
+                    localStorage.setItem("refreshToken", refreshToken);
+                    localStorage.setItem("accessToken", accessToken);
+                    //generateAccessToken(obj_data["id"]);
+                    //location.replace("/index");
+                }
+                //alert(JSON.stringify(data));
+            },
+            error: (obj_data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(obj_data));
+            }
+        });
+    }
+    function generateAccessToken(){
+        $.ajax({
+            url: "/api/auth/access-token",
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Content-type", "application/json");
+                xhr.setRequestHeader("RefreshToken", localStorage.getItem("refreshToken"));
+            },
+            data: {},
+            cache: false,
+            success: (data, status, xhr) => {
+                alert("success!!");
+
+                let accessToken = xhr.getResponseHeader("Authorization");
+                alert(accessToken);
+
+                localStorage.setItem("accessToken", accessToken);
+                //alert(JSON.stringify(data));
+            },
+            error: (data, status, xhr) => {
+                alert("error!!");
+                alert(JSON.stringify(data));
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

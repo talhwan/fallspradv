@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <head th:replace="~{@{includes/admin/head}}"></head>
+</head>
+<body>
+
+<script id="list_info_tbgrantpart" type="text/x-handlebars-template">
+    {{#resultData_tbgrantpart}}
+    <tr>
+        <td>{{order}}</td>
+        <td>{{content}}</td>
+        <td>
+            <input type="checkbox" class="input_tbgrantpart_{{title}}_all" title="{{title}}" keyword="all" onclick="listener_chk_tbgrantpart(this, 'input_tbgrantpart_{{title}}')" />
+        </td>
+        <td>
+            <input type="checkbox" class="input_tbgrantpart_{{title}}_each" title="{{title}}" keyword="create" id="input_tbgrantpart_{{title}}_create" onclick="listener_chk_tbgrantpart(this, 'input_tbgrantpart_{{title}}')"/>
+        </td>
+        <td>
+            <input type="checkbox" class="input_tbgrantpart_{{title}}_each" title="{{title}}" keyword="update" id="input_tbgrantpart_{{title}}_update" onclick="listener_chk_tbgrantpart(this, 'input_tbgrantpart_{{title}}')"/>
+        </td>
+        <td>
+            <input type="checkbox" class="input_tbgrantpart_{{title}}_each" title="{{title}}" keyword="read" id="input_tbgrantpart_{{title}}_read" onclick="listener_chk_tbgrantpart(this, 'input_tbgrantpart_{{title}}')"/>
+        </td>
+    </tr>
+    {{/resultData_tbgrantpart}}
+</script>
+<script type="text/javascript">
+    var list_info_tbgrantpart = $("#list_info_tbgrantpart").html();
+    var list_info_tbgrantpart_template = Handlebars.compile(list_info_tbgrantpart);
+</script>
+<script>
+    function listener_chk_tbgrantpart(obj, obj_class){
+        listener_chk(obj, obj_class);
+        let keyword = $(obj).attr("keyword");
+        let checked = $(obj).prop("checked");
+        let title = $(obj).attr("title");
+        if(keyword == "all"){
+            let arrayEach = $("." + obj_class + "_each");
+            for(each of arrayEach){
+                let _param = {};
+                _param["tbgrantId"] = $("#detail_tbgrant_id").val();
+                _param["cate"] = $(each).attr("title");
+                _param["content"] = $(each).attr("keyword");
+                _param["way"] = checked;
+                toggle_tbgrantpart(_param);
+            }
+        } else {
+            let _param = {};
+            _param["tbgrantId"] = $("#detail_tbgrant_id").val();
+            _param["cate"] = title;
+            _param["content"] = keyword;
+            _param["way"] = checked;
+            toggle_tbgrantpart(_param);
+        }
+    }
+</script>
+
+<div id="wrapper">
+    <body th:replace="~{@{includes/admin/nav}}"></body>
+    <script>
+        $(".sidemenu_li_tbgrant").addClass("active");
+    </script>
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <body th:replace="~{@{includes/admin/navbar_top}}"></body>
+        <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-lg-10">
+                <h2>접근권한 상세 : <font class="font_tbgrant_title"></font></h2>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/admin">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/tbgrant/admin_list">권한 관련</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/tbgrant/admin_list">접근권한 목록</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <strong>접근권한 상세</strong>
+                    </li>
+                </ol>
+            </div>
+            <div class="col-lg-2">
+            </div>
+        </div>
+
+        <div class="animated fadeInRight" style="padding-top:12.5px;padding-bottom:0px;">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox-title">
+                        <h5>#<font class="font_tbgrant_id">-</font></h5>
+                    </div>
+                    <div class="ibox-content" style="padding-bottom:0.1px;">
+                        <input type="hidden" id="detail_tbgrant_id" value="" />
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">삭제여부</label>
+                            <div class="col-sm-4">
+                                <select class="form-control m-b" id="detail_tbgrant_deleted" keyword="deleted" onchange="update_tbgrant(this)">
+                                    <option value="N">일반</option>
+                                    <option value="Y">삭제</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-2 col-form-label">구분</label>
+                            <div class="col-sm-4">
+                                <select class="form-control m-b" id="detail_tbgrant_cate" keyword="cate" onchange="update_tbgrant(this)">
+                                    <option value="top">최고관리자</option>
+                                    <option value="middle">중간관리자</option>
+                                    <option value="normal">일반관리자</option>
+                                </select>
+                            </div>
+
+                            <label class="col-sm-2 col-form-label">*제목</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control m-b" id="detail_tbgrant_title" keyword="title" placeholder="내용을 입력하세요" onchange="update_tbgrant(this)" />
+                            </div>
+
+                            <label class="col-sm-6"></label>
+                            <label class="col-sm-2 col-form-label">내용</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control m-b" id="detail_tbgrant_content" keyword="content" onkeyup="listener_maxlength_check(this, 2000);" onchange="update_tbgrant(this)" rows="4" placeholder="내용을 입력하세요"></textarea>
+                            </div>
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>-</th>
+                                    <th>전체</th>
+                                    <th>생성</th>
+                                    <th>수정</th>
+                                    <th>조회</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tbody_tbgrantpart_list">
+                                </tbody>
+                            </table>
+                            <table style="width:100%">
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" onclick="location_href_path_param('/tbgrantuser/admin_list/', getIdFromUrl(null))">접근권한 사용자 목록</button>
+                                    </td>
+                                    <td style="text-align: right;">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $( document ).ready(function() {
+                console.log( "ready!" );
+                detail_tbgrant();
+            });
+
+            function detail_tbgrant(){
+                let tbgrantId = getIdFromUrl(null);
+                let _data = new Map();
+                _data.url = "/api/tbgrant";
+                _data.type = "GET";
+                _data.param = {'id':tbgrantId};
+                _data.success = function(obj_data, obj_status, obj_xhr){
+                    //alert(JSON.stringify(obj_data));
+                    let detailKeys = Object.keys(obj_data)
+                    for (let eachKey of detailKeys){
+                        $(".font_tbgrant_" + eachKey).text(obj_data[eachKey]);
+                        $("#detail_tbgrant_" + eachKey).val(obj_data[eachKey]);
+                        $("#img_tbgrant_" + eachKey).attr("src", obj_data[eachKey]);
+                    }
+
+                    let cates = obj_data.cates;
+                    for(let i=0;i<cates.length;i++){
+                        let _each = {};
+                        let each_list = [];
+                        _each["order"] = (i+1);
+                        _each["title"] = cates[i][0];
+                        _each["content"] = cates[i][1];
+                        each_list.push(_each);
+                        $("#tbody_tbgrantpart_list").append(list_info_tbgrantpart_template({"resultData_tbgrantpart": each_list}));
+                    }
+                    let tbgrantparts = obj_data.tbgrantparts;
+                    for(each of tbgrantparts){
+                        //alert(JSON.stringify(each));
+                        $("#input_tbgrantpart_" + each["cate"] + "_" + each["content"]).prop("checked", true);
+                        //alert(each["cate"]);
+                        check_chk("input_tbgrantpart_" + each["cate"]);
+                    }
+                }
+                _data.error = function(obj_data, obj_status, obj_xhr){
+                    alert("정상적으로 이루어지지 않았습니다. 다시 시도해주세요.");
+                }
+                func_ajax(_data);
+            }
+            function update_tbgrant(obj){
+                let _param = {};
+                _param["id"] = $("#detail_tbgrant_id").val();
+                _param[$(obj).attr("keyword")] = $(obj).val();
+                //alert(_param[$(obj).attr("keyword")]);
+
+                let _data = new Map();
+                _data.url = "/api/tbgrant";
+                _data.type = "PUT";
+                _data.param = _param;
+                _data.success = function(obj_data, obj_status, obj_xhr){
+                    //alert("수정되었습니다.");
+                }
+                _data.error = function(obj_data, obj_status, obj_xhr){
+                    alert("정상적으로 이루어지지 않았습니다. 다시 시도해주세요.");
+                }
+                func_ajax(_data);
+            }
+            function toggle_tbgrantpart(_param){
+                let _data = new Map();
+                _data.url = "/api/tbgrantpart/toggle";
+                _data.type = "POST";
+                _data.param = _param;
+                _data.success = function(obj_data, obj_status, obj_xhr){
+                    //alert(1);
+                }
+                _data.error = function(obj_data, obj_status, obj_xhr){
+                    alert("정상적으로 이루어지지 않았습니다. 다시 시도해주세요.");
+                }
+                func_ajax(_data);
+            }
+        </script>
+        <body th:replace="~{@{includes/admin/footer}}"></body>
+    </div>
+    <body th:replace="~{@{includes/admin/right_sidebar}}"></body>
+</div>
+<body th:replace="~{@{includes/admin/bottom}}"></body>
+</body>
+</html>

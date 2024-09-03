@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.8/handlebars.min.js"></script>
+</head>
+<body>
+
+<script id="list_info_tbpost" type="text/x-handlebars-template">
+    {{#resultData_tbpost}}
+    <tr class="gradeA">
+        <td><font class="font_deleted_{{deleted}} chk_deleted_{{id}}">{{deleted}}</font></td>
+        <td><a href="/tbpost/detail/{{id}}">{{title}}</a></td>
+        <td>{{createdAt}} / {{modifiedAt}}</td>
+    </tr>
+    {{/resultData_tbpost}}
+</script>
+<script type="text/javascript">
+    var list_info_tbpost = $("#list_info_tbpost").html();
+    var list_info_tbpost_template = Handlebars.compile(list_info_tbpost);
+</script>
+
+deleted :
+<select id="detail_tbpost_deleted">
+    <option value="" selected="selected">전체</option>
+    <option value="N">일반</option>
+    <option value="Y">삭제</option>
+</select>
+title :
+<input id="detail_tbpost_title" type="text" />
+author :
+<input id="detail_tbpost_author" type="text" />
+
+<button onclick="plist_tbpost()">list</button>
+
+<div>
+    총 글 등록수 : <font class="font_tbpost_listsize">-</font>
+</div>
+<div>
+    총 페이지 수 : <font class="font_tbpost_pagesize">-</font>
+</div>
+<div>
+    현재 페이지 : <font class="font_tbpost_callpage">-</font>
+</div>
+<div>
+    orderby :
+    <select id="search_tbpost_orderby" onchange="listener_search_changed(this);">
+        <option value="created_at" selected="selected">입력순</option>
+        <option value="title">제목순</option>
+    </select>
+    orderway :
+    <select id="search_tbpost_orderway" onchange="listener_search_changed(this);">
+        <option value="desc" selected="selected">역방향</option>
+        <option value="asc">정방향</option>
+    </select>
+    callpage :
+        <input id="search_tbpost_callpage" type="number" value="1" onchange="listener_search_changed(this);"/>
+    perpage :
+    <select id="search_tbpost_perpage" onchange="listener_search_changed(this);">
+        <option value="2" selected="selected">2</option>
+        <option value="3">3</option>
+        <option value="10">10</option>
+    </select>
+</div>
+
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>삭제여부</th>
+                <th>제목</th>
+                <th>일시</th>
+            </tr>
+        </thead>
+        <tbody id="tbody_tbpost_list">
+        </tbody>
+    </table>
+    <div id="tfoot_tbpost_page">
+    </div>
+</div>
+<script>
+    $( document ).ready(function() {
+        console.log( "ready!" );
+        plist_tbpost();
+    });
+</script>
+<script>
+    function listener_call_page(obj){
+        $("#search_tbpost_callpage").val(obj);
+        plist_tbpost();
+    }
+    function listener_search_changed(obj){
+        let temp_id = $(obj).attr("id");
+        let temp_val = $(obj).val();
+        alert(temp_id + " : " + temp_val + "로 다시 검색합니다.")
+        plist_tbpost();
+    }
+    function plist_tbpost(){
+        $.ajax({
+            url: "/api/tbpost/plist",
+            type: "GET",
+            contentType : 'application/json; charset=utf-8',
+            data: {
+                deleted : $("#detail_tbpost_deleted").val()
+                , orderby : $("#search_tbpost_orderby").val()
+                , orderway : $("#search_tbpost_orderway").val()
+                , perpage : $("#search_tbpost_perpage").val()
+                , callpage : $("#search_tbpost_callpage").val()
+                , title : $("#detail_tbpost_title").val()
+                , author : $("#detail_tbpost_author").val()
+            },
+            cache: false,
+            success: (data, status, xhr)=>{
+                //alert("success!!");
+                //alert(JSON.stringify(data));
+
+                $("#search_tbpost_callpage").val(data["callpage"]);
+                $(".font_tbpost_callpage").html(data["callpage"]);
+
+                $("#tfoot_tbpost_page").html("");
+                let callpage = Number(data["callpage"]);
+                let pagesize = Number(data["pagesize"]);
+                $("#tfoot_tbpost_page").append("<a href='javascript:listener_call_page("+callpage+")'>"+callpage+"</a>");
+                for(let i=0;i<5;i++){
+                    let before_page = (callpage - i - 1);
+                    if(before_page > 0){
+                        $("#tfoot_tbpost_page").prepend("<a href='javascript:listener_call_page("+before_page+")'>"+before_page+"</a>");
+                    }
+                }
+                $("#tfoot_tbpost_page").prepend("<a href='javascript:listener_call_page("+1+")'>맨앞페이지</a>");
+
+                for(let i=0;i<5;i++){
+                    let next_page = (callpage + i + 1);
+                    if(next_page <= pagesize){
+                       $("#tfoot_tbpost_page").append("<a href='javascript:listener_call_page("+next_page+")'>"+next_page+"</a>");
+                    }
+                }
+                $("#tfoot_tbpost_page").append("<a href='javascript:listener_call_page("+pagesize+")'>맨뒤페이지</a>");
+
+                $(".font_tbpost_listsize").html(data["listsize"]);
+                $(".font_tbpost_pagesize").html(data["pagesize"]);
+                $("#tbody_tbpost_list").html("");
+                let a_list = data.list;
+                $("#tbody_tbpost_list").append(list_info_tbpost_template({"resultData_tbpost":a_list}));
+
+            },
+            error: (data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(data));
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

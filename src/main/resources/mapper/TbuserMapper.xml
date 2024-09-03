@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0/EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thc.fallspradv.mapper.TbuserMapper">
+
+	<select id="login" parameterType="hashMap" resultType="com.thc.fallspradv.dto.TbuserDto$DetailResDto">
+		SELECT tbuser.id
+		FROM tbuser
+		WHERE tbuser.username = #{username}
+		  AND tbuser.password = #{password}
+	</select>
+	<!---->
+	<select id="detail" parameterType="hashMap" resultType="com.thc.fallspradv.dto.TbuserDto$DetailResDto">
+		SELECT tbuser.id
+			,tbuser.deleted
+			,tbuser.process
+			,tbuser.created_at as createdAt
+			,tbuser.modified_at as modifiedAt
+
+			,tbuser.username
+			/*,tbuser.password*/
+			,tbuser.name
+			,tbuser.nick
+			,tbuser.phone
+			,tbuser.gender
+			,tbuser.content
+			,tbuser.img
+		FROM tbuser
+		WHERE tbuser.id = #{id}
+	</select>
+	<select id="list" parameterType="hashMap" resultType="com.thc.fallspradv.dto.TbuserDto$DetailResDto">
+		SELECT tbuser.id
+		FROM tbuser
+		WHERE tbuser.id is not NULL
+		<if test = "deleted != null and deleted !=''">AND tbuser.deleted = #{deleted}</if>
+		<if test = "process != null and process !=''">AND tbuser.process = #{process}</if>
+		<if test = "name != null and name !=''">AND tbuser.name LIKE CONCAT('%', #{name}, '%')</if>
+		<if test = "nick != null and nick !=''">AND tbuser.nick = #{nick}</if>
+		<if test = "phone != null and phone !=''">AND tbuser.phone LIKE CONCAT('%', #{phone})</if>
+		ORDER BY tbuser.created_at DESC
+	</select>
+
+	<select id="scrollList" parameterType="hashMap" resultType="com.thc.fallspradv.dto.TbuserDto$DetailResDto">
+		SELECT tbuser.id
+		FROM tbuser
+		WHERE tbuser.id is not NULL
+		<if test = "deleted != null and deleted !=''">AND tbuser.deleted = #{deleted}</if>
+		<if test = "process != null and process !=''">AND tbuser.process = #{process}</if>
+		<if test = "name != null and name !=''">AND tbuser.name LIKE CONCAT('%', #{name}, '%')</if>
+		<if test = "nick != null and nick !=''">AND tbuser.nick = #{nick}</if>
+		<if test = "phone != null and phone !=''">AND tbuser.phone LIKE CONCAT('%', #{phone})</if>
+
+		<if test = "orderby =='created_at'">
+			<if test = "orderway =='desc'">
+				<if test = "cursor != null and cursor !=''">AND STR_TO_DATE(#{cursor}, '%Y-%m-%d %H:%i:%s.%f') > tbuser.created_at </if>
+				ORDER BY tbuser.created_at DESC
+			</if>
+			<if test = "orderway =='asc'">
+				<if test = "cursor != null and cursor !=''">AND tbuser.created_at > STR_TO_DATE(#{cursor}, '%Y-%m-%d %H:%i:%s.%f')</if>
+				ORDER BY tbuser.created_at ASC
+			</if>
+		</if>
+		<if test = "orderby =='name'">
+			<if test = "orderway =='desc'">
+				<if test = "cursor != null and cursor !=''">AND #{cursor} > tbuser.name</if>
+				ORDER BY tbuser.name DESC
+			</if>
+			<if test = "orderway =='asc'">
+				<if test = "cursor != null and cursor !=''">AND tbuser.name > #{cursor}</if>
+				ORDER BY tbuser.name ASC
+			</if>
+		</if>
+		LIMIT 0, #{perpage}
+	</select>
+
+	<select id="pagedList" parameterType="hashMap" resultType="com.thc.fallspradv.dto.TbuserDto$DetailResDto">
+		SELECT tbuser.id
+		FROM tbuser
+		WHERE tbuser.id is not NULL
+		<if test = "deleted != null and deleted !=''">AND tbuser.deleted = #{deleted}</if>
+		<if test = "process != null and process !=''">AND tbuser.process = #{process}</if>
+		<if test = "name != null and name !=''">AND tbuser.name LIKE CONCAT('%', #{name}, '%')</if>
+		<if test = "nick != null and nick !=''">AND tbuser.nick = #{nick}</if>
+		<if test = "phone != null and phone !=''">AND tbuser.phone LIKE CONCAT('%', #{phone})</if>
+
+		<if test = "orderby =='created_at'">ORDER BY tbuser.created_at </if>
+		<if test = "orderby =='name'">ORDER BY tbuser.name </if>
+		<if test = "orderway =='asc'">ASC</if>
+		<if test = "orderway =='desc'">DESC</if>
+		LIMIT #{offset}, #{perpage}
+	</select>
+	<select id="pagedListCount" parameterType="hashMap" resultType="Integer">
+		SELECT count(tbuser.id) as listsize
+		FROM tbuser
+		WHERE tbuser.id is not NULL
+		<if test = "deleted != null and deleted !=''">AND tbuser.deleted = #{deleted}</if>
+		<if test = "process != null and process !=''">AND tbuser.process = #{process}</if>
+		<if test = "name != null and name !=''">AND tbuser.name LIKE CONCAT('%', #{name}, '%')</if>
+		<if test = "nick != null and nick !=''">AND tbuser.nick = #{nick}</if>
+		<if test = "phone != null and phone !=''">AND tbuser.phone LIKE CONCAT('%', #{phone})</if>
+	</select>
+
+</mapper>

@@ -1,0 +1,268 @@
+<script id="list_info_tbcrew_header" type="text/x-handlebars-template">
+    {{#resultData_tbcrew_header}}
+    <li class="srch_list_item" onclick="listener_href_tbcrew_detail('{{id}}');" style="cursor:pointer;">
+        <div class="mediaSet">
+            <span class="mediaSet_ico ">
+                <img src="{{img}}" alt=""/>
+            </span>
+            <div class="mediaSet_txt">
+                <div><span class="tit t_hidden_1 ">{{title}}</span></div>
+                <div><span class="desc t_hidden_1 ">{{content}}</span></div>
+            </div>
+            <div class="mediaSet_tag">
+                <span class="hide span_tbcrew_target1_{{id}} tag _economy skeleton_item">경제/금융</span>
+                <span class="hide span_tbcrew_target2_{{id}} tag _health skeleton_item">헬스케어</span>
+                <span class="hide span_tbcrew_target3_{{id}} tag _beauty skeleton_item">뷰티</span>
+                <span class="hide span_tbcrew_target4_{{id}} tag _business skeleton_item">비즈니스</span>
+                <span class="hide span_tbcrew_target5_{{id}} tag _development skeleton_item">자기계발</span>
+
+                <span class="hide span_tbcrew_target6_{{id}} tag _travel skeleton_item">여행</span>
+                <span class="hide span_tbcrew_target7_{{id}} tag _restaurant skeleton_item">외식</span>
+                <span class="hide span_tbcrew_target8_{{id}} tag _mobility skeleton_item">모빌리티</span>
+                <span class="hide span_tbcrew_target9_{{id}} tag _fashion skeleton_item">패션</span>
+                <span class="hide span_tbcrew_target10_{{id}} tag _university skeleton_item">대학생활</span>
+
+                <span class="hide span_tbcrew_target11_{{id}} tag _sports skeleton_item">스포츠</span>
+                <span class="hide span_tbcrew_target12_{{id}} tag _worker skeleton_item">직장인</span>
+            </div>
+        </div>
+    </li>
+    {{/resultData_tbcrew_header}}
+</script>
+<script type="text/javascript">
+    var list_info_tbcrew_header = $("#list_info_tbcrew_header").html();
+    var list_info_tbcrew_header_template = Handlebars.compile(list_info_tbcrew_header);
+</script>
+
+<script id="list_info_tbcrewtime_header" type="text/x-handlebars-template">
+    {{#resultData_tbcrewtime_header}}
+    <li class="srch_list_item" onclick="listener_href_tbcrew_detail('{{tbcrewId}}');" style="cursor:pointer;">
+        <div class="mediaSet">
+            <span class="mediaSet_ico ">
+                <img src="{{tbcrewImg}}" alt=""/>
+            </span>
+            <div class="mediaSet_txt">
+                <div><span class="tit t_hidden_1 ">{{title}}</span></div>
+            </div>
+            <div class="mediaSet_tag">
+                <span class="tag _sns"><font class="font_tbcrewtime_cate_{{cate}}">{{cate}}</font></span>
+            </div>
+        </div>
+    </li>
+    {{/resultData_tbcrewtime_header}}
+</script>
+<script type="text/javascript">
+    var list_info_tbcrewtime_header = $("#list_info_tbcrewtime_header").html();
+    var list_info_tbcrewtime_header_template = Handlebars.compile(list_info_tbcrewtime_header);
+</script>
+
+<header class="header">
+    <h1 class="logo">
+        <a href="/index"><img src="/resources/frontuser/assets/images/logo.svg" alt=""></a>
+    </h1>
+    <nav class="nav">
+        <a href="/tbcrew/list" class="nav_btn">데이터베이스</a></li>
+        <a href="/tbmaterial/list" class="nav_btn">소재라이브러리</a></li>
+    </nav>
+    <div class="srch">
+        <div class="select-box ty_small">
+            <input type="text" class="select-input" value="매체" readonly>
+            <ul class="options">
+                <li data-value="1" class="option" onclick="listener_search_cate('tbcrew');">매체</li>
+                <li data-value="2" class="option" onclick="listener_search_cate('tbcrewtime');">상품</li>
+            </ul>
+        </div>
+        <input type="hidden" id="input_search_cate" value="tbcrew"/>
+        <script>
+            function listener_search_cate(obj){
+                $("#input_search_cate").val(obj);
+                $(".ul_search_result").css("display", "none");
+                $("#ul_search_"+obj+"_result").css("display", "");
+                $("#div_search_result").removeClass("on");
+            }
+        </script>
+        <input type="text" class="srch_input" id="input_header_keyword" placeholder="찾고 싶은 매체/상품을 검색해보세요!" onchange="listener_keyword_searching()"/>
+        <button class="srch_btn" onclick="listener_keyword_searching();"></button>
+        <script>
+            function listener_keyword_searching(){
+                let input_search_cate = $("#input_search_cate").val();
+                if(input_search_cate === "tbcrew"){
+                    search_header_tbcrew();
+                } else {
+                    search_header_tbcrewtime();
+                }
+            }
+        </script>
+        <span class="line"></span>
+        <!--[D] 'on' class 로 활성화-->
+        <div class="srch_result" id="div_search_result">
+            <ul class="srch_list ul_search_result" id="ul_search_tbcrew_result">
+            </ul>
+            <ul class="srch_list ul_search_result" id="ul_search_tbcrewtime_result">
+            </ul>
+            <div class="no_result div_nodata_header_list">
+                <img src="/resources/frontuser/assets/images/no_result.svg" alt="">
+                <div class="desc fz_5 fc_grey">
+                    조건에 맞는 결과가 없어요 <br> 검색어를 수정해주세요
+                </div>
+            </div>
+        </div>
+        <!-- [D][개발시 삭제] UI 확인용 스크립트 -->
+        <!--<script>
+            const srch_btn = document.querySelector('.srch_btn');
+            const srch_result = document.querySelector('.srch_result');
+            srch_btn.addEventListener('click', (event)=>{
+                srch_result.classList.add('on');
+            });
+        </script>-->
+        <!--// [D][개발시 삭제] UI 확인용 스크립트 -->
+    </div>
+
+    <div class="user ex_close nav_tbuser_login nav_tbuser_login_after hide">
+        <button type="button" class="user_ico" onclick="user_toggle()"></button>
+        <div class="user_cont">
+            <div class="user_info d_flex fw_w ai_c _gapX8 _gapY4">
+                <div class="user_name fz_4 fwB"><font class="font_my_tbuser_name">-</font></div>
+                <div class="user_status tag _subscribe">구독중</div>
+                <div class="user_mail w100 fz_3 fc_grey"><font class="font_my_tbuser_username">-</font></div>
+            </div>
+            <ul class="user_menu">
+                <li><a href="/tbuser/mypage" class="user_menu_btn hv">마이페이지</a></li>
+                <li><a href="/tbcrew/create" class="user_menu_btn hv">매체 등록/수정 요청</a></li>
+                <li><a href="javascript:logout();" class="user_menu_btn hv">로그아웃</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="header_btns d_flex _gap8 ml_auto nav_tbuser_login nav_tbuser_login_before hide">
+        <a href="/tbuser/login" class="f_btn _ol ty_small">로그인</a>
+        <a href="/tbuser/snssignup" type="button" class="f_btn _blue ty_small">회원가입</a>
+    </div>
+</header>
+<script>
+    let my_tbuser_name = localStorage.getItem("my_tbuser_name");
+    let my_tbuser_username = localStorage.getItem("my_tbuser_username");
+    $( document ).ready(function() {
+        if(!isNull(my_tbuser_name)){
+            $(".font_my_tbuser_name").text(my_tbuser_name);
+        }
+        if(!isNull(my_tbuser_username)){
+            $(".font_my_tbuser_username").text(my_tbuser_username);
+        }
+
+        if(!isNull(localStorage.getItem("refreshToken"))){
+            $(".div_before_login").removeClass("hide");
+        } else {
+            $(".div_after_login").removeClass("hide");
+        }
+    });
+</script>
+
+<script>
+    function search_header_tbcrew() {
+        let params = {
+            'deleted': 'N'
+            , 'perpage': '10'
+            , 'cursor': ""
+            , 'orderby': "countread"
+            , 'orderway': "desc"
+
+            , 'title': $("#input_header_keyword").val()
+        };
+
+        let _data = {};
+        _data.url = "/api/tbcrew/mlist";
+        _data.type = "GET";
+        _data.param = params;
+        _data.success = function (obj_data, obj_status, obj_xhr) {
+            //alert(JSON.stringify(obj_data));
+            $("#ul_search_tbcrew_result").html("");
+            $(".div_nodata_header_list").removeClass("hide");
+            let each_list = obj_data;
+            if (each_list.length == 0) {
+            } else {
+                $(".div_nodata_header_list").addClass("hide");
+            }
+            $("#div_search_result").addClass("on");
+
+            for (let each of each_list) {
+                let temp_list = [];
+                temp_list.push(each);
+                $("#ul_search_tbcrew_result").append(list_info_tbcrew_header_template({"resultData_tbcrew_header": temp_list}));
+
+                let each_id = each["id"];
+                //타겟
+                for (let i = 0; i < 12; i++) {
+                    let targetId = (i + 1) + "";
+                    if (each["target" + targetId]) {
+                        $(".span_tbcrew_target" + targetId + "_" + each_id).removeClass("hide");
+                    }
+                }
+            }
+            setTimeout(hideSkeletonItem, 600);
+        }
+        _data.error = function (obj_data, obj_status, obj_xhr) {
+            alert("정상적으로 이루어지지 않았습니다. 다시 시도해주세요.");
+        }
+        func_ajax(_data);
+    }
+</script>
+<script>
+    function search_header_tbcrewtime() {
+        let params = {
+            'deleted': 'N'
+            , 'perpage': '10'
+            , 'cursor': ""
+            , 'orderby': "countread"
+            , 'orderway': "desc"
+
+            , 'title': $("#input_header_keyword").val()
+        };
+
+        let _data = {};
+        _data.url = "/api/tbcrewtime/mlist";
+        _data.type = "GET";
+        _data.param = params;
+        _data.success = function (obj_data, obj_status, obj_xhr) {
+            $("#ul_search_tbcrewtime_result").html("");
+            $(".div_nodata_header_list").removeClass("hide");
+            let each_list = obj_data;
+            if (each_list.length == 0) {
+            } else {
+                $(".div_nodata_header_list").addClass("hide");
+            }
+            $("#div_search_result").addClass("on");
+
+            for (let each of each_list) {
+                let temp_list = [];
+                temp_list.push(each);
+                $("#ul_search_tbcrewtime_result").append(list_info_tbcrewtime_header_template({"resultData_tbcrewtime_header": temp_list}));
+            }
+            setTimeout(hideSkeletonItem, 600);
+        }
+        _data.error = function (obj_data, obj_status, obj_xhr) {
+            alert("정상적으로 이루어지지 않았습니다. 다시 시도해주세요.");
+        }
+        func_ajax(_data);
+    }
+</script>
+
+<script>
+    function listener_href_tbcrew_detail(obj_id) {
+        $(".p_modal_signup_title").html($(".input_signup_title_detail").val());
+        if (isNull(localStorage.getItem("refreshToken"))) {
+            $(".div_modal_signup").addClass("on");
+            return false;
+        }
+        location.href = "/tbcrew/detail/" + obj_id;
+    }
+    function listener_index_filter() {
+        $(".p_modal_signup_title").html($(".input_signup_title_filter").val());
+        if (isNull(localStorage.getItem("refreshToken"))) {
+            $(".div_modal_signup").addClass("on");
+            return false;
+        } else {
+            return true;
+        }
+    }
+</script>

@@ -1,0 +1,72 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>index</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    </head>
+    <body>
+
+        <div id="div_today" class="div_date" style="padding:100px;margin:50px;border: 1px solid;">2024-08-02</div>
+
+        <input type="text" id="input_text1"/>
+
+        <button onclick="listener_timeout()">
+            타임아웃 시작
+        </button>
+        <button onclick="listener_count()">
+            카운트 시작
+        </button>
+        <button onclick="funcIntervalClear()">
+            카운트 종료
+        </button>
+
+        <script>
+            function listener_timeout() {
+                //특정 시간 후에 실행되도록 하는 기능!
+                setTimeout(function () {
+                    console.log("특정 시간 이후 호출");
+                }, 2000);
+                console.log("실제 시작 시간!!");
+            }
+        </script>
+        <script>
+        let funcInterval = null;
+        let timer = 180;
+        function listener_count(){
+            //특정 시간 간격으로 반복 실행되는 기능!
+            funcInterval = setInterval(funcTimer, 100); //파라미터 첫번 째는 반복실행할 함수, 두번째는 반복할 주기(밀리세컨드 단위)
+        }
+        function funcTimer() {
+            //이게 실제로 반복되는 코드!!
+            timer--;
+            let min = timer / 60;
+            //소수점 제거
+            //min = min.toFixed();
+            min = Math.floor(min);
+            let second_string = "";
+            let second = timer % 60;
+            if(second < 10){
+            second_string = "0" + second;
+        } else {
+            second_string = "" + second;
+        }
+        //console.log('a');
+        $("#input_text1").val(min + ":" + second_string);
+            if(timer < 0){
+                funcIntervalClear();
+                $("#input_text1").val("0:00");
+            }
+        }
+        function funcIntervalClear() {
+            clearInterval(funcInterval);
+        }
+        </script>
+
+
+    <script>
+
+    </script>
+
+
+    </body>
+</html>

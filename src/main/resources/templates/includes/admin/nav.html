@@ -1,0 +1,67 @@
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
+            <li class="nav-header">
+                <div class="dropdown profile-element">
+                    <img alt="image" class="rounded-circle img_my_tbuser_mpic" src="/resources/frontadmin/img/profile_small.jpg"/>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <span class="block m-t-xs font-bold"><font class="font_my_tbuser_nick">-</font></span>
+                        <span class="text-muted text-xs block">관리자</span>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                        <li><a class="dropdown-item" href="/tbuser/admin_mypage">Profile</a></li>
+                        <!--
+                        <li><a class="dropdown-item" href="contacts.html">Contacts</a></li>
+                        <li><a class="dropdown-item" href="mailbox.html">Mailbox</a></li>
+                        -->
+                        <li class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="javascript:logout();">Logout</a></li>
+                    </ul>
+                </div>
+                <div class="logo-element">
+                    #
+                </div>
+            </li>
+
+            <li class="sidemenu_li_tbuser sidemenu_li_tbgrant sidemenu_li_tbmembership">
+                <a href="javascript:void(0);"><i class="fa fa-th-large"></i> <span class="nav-label">권한 관련</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li class="sidemenu_li_tbgrant"><a href="/tbgrant/admin_list">접근권한</a></li>
+                    <li class="sidemenu_li_tbuser"><a href="/tbuser/admin_list">사용자</a></li>
+                    <li class="sidemenu_li_tbmembership"><a href="/tbmembership/admin_list">멤버쉽</a></li>
+                </ul>
+            </li>
+            <li class="sidemenu_li_tbnotice sidemenu_li_tbfaq sidemenu_li_tbqna sidemenu_li_tbbanner sidemenu_li_tbpopup">
+                <a href="javascript:void(0);"><i class="fa fa-diamond"></i> <span class="nav-label">글 모음</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li class="sidemenu_li_tbnotice"><a href="/tbnotice/admin_list">공지사항</a></li>
+                    <li class="sidemenu_li_tbfaq"><a href="/tbfaq/admin_list">FAQ</a></li>
+                    <li class="sidemenu_li_tbqna"><a href="/tbqna/admin_list">1:1문의</a></li>
+                    <li class="sidemenu_li_tbbanner"><a href="/tbbanner/admin_list">배너</a></li>
+                    <li class="sidemenu_li_tbpopup"><a href="/tbpopup/admin_list">팝업</a></li>
+                </ul>
+            </li>
+
+            <li class="sidemenu_li_tbcrew sidemenu_li_tbcrewtime sidemenu_li_tbcrewuser sidemenu_li_tbcrewask">
+                <a href="javascript:void(0);"><i class="fa fa-flask"></i> <span class="nav-label">매체관리</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li class="sidemenu_li_tbcrew"><a href="/tbcrew/admin_list">매체</a></li>
+                    <li class="sidemenu_li_tbcrewtime"><a href="/tbcrewtime/admin_list">매체 상품</a></li>
+                    <li class="sidemenu_li_tbcrewuser"><a href="/tbcrewuser/admin_list">매체 리뷰</a></li>
+                    <li class="sidemenu_li_tbcrewask"><a href="/tbcrewask/admin_list">매체 문의</a></li>
+                </ul>
+            </li>
+            <li class="sidemenu_li_tbmaterial">
+                <a href="javascript:void(0);"><i class="fa fa-book"></i> <span class="nav-label">소재관리</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li class="sidemenu_li_tbmaterial"><a href="/tbmaterial/admin_list">소재라이브러리</a></li>
+                </ul>
+            </li>
+
+            <li class="landing_link">
+                <a target="_blank" href="/index"><i class="fa fa-star"></i> <span class="nav-label">Userpage</span> <span class="label label-warning float-right">NEW</span></a>
+            </li>
+        </ul>
+
+    </div>
+</nav>

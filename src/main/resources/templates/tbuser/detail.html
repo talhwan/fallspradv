@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+id :
+<input id="detail_tbuser_id" type="text" readonly/>
+username :
+<input id="detail_tbuser_username" type="text" />
+password :
+<input id="detail_tbuser_password" type="text" />
+name :
+<input id="detail_tbuser_name" type="text" />
+nick :
+<input id="detail_tbuser_nick" type="text" />
+
+<button onclick="detail_tbuser()">detail</button>
+<button onclick="update_tbuser()">update</button>
+<script>
+    $( document ).ready(function() {
+        console.log( "ready!" );
+        detail_tbuser();
+    });
+</script>
+<script>
+    function getIdFromUrl(obj){
+        let temp_url_with_idx = obj;
+        if(obj == null){
+            temp_url_with_idx = window.location.href;
+            // => http://localhost:8080/tbuser/detail/963e1e8f040a43a88d5213598aaebc61
+        }
+        let split_slash_temp_idx = temp_url_with_idx.split('/');
+        let temp_idx = split_slash_temp_idx[split_slash_temp_idx.length - 1];
+        let split_question_temp_idx = temp_idx.split('?');
+        if(split_question_temp_idx.length > 0){
+            temp_idx = split_question_temp_idx[0];
+        }
+        return temp_idx;
+    }
+    function detail_tbuser(){
+        $.ajax({
+            url: "/api/tbuser",
+            type: "GET",
+            contentType : 'application/json; charset=utf-8',
+            data: {
+                id : getIdFromUrl(null)
+            },
+            cache: false,
+            success: (obj_data, status, xhr)=>{
+                //alert("success!!");
+                //alert(JSON.stringify(data));
+                let detailKeys = Object.keys(obj_data)
+                for (let eachKey of detailKeys){
+                    $("#detail_tbuser_" + eachKey).val(obj_data[eachKey]);
+                }
+            },
+            error: (data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(data));
+            }
+        });
+    }
+
+    function update_tbuser(){
+        $.ajax({
+            url: "/api/tbuser",
+            type: "PUT",
+            contentType : 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                id : $("#detail_tbuser_id").val()
+                ,name : $("#detail_tbuser_name").val()
+                ,nick : $("#detail_tbuser_nick").val()
+                ,phone : $("#detail_tbuser_phone").val()
+            }),
+            cache: false,
+            success: (data, status, xhr)=>{
+                //alert("success!!");
+                alert(JSON.stringify(data));
+            },
+            error: (data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(data));
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.8/handlebars.min.js"></script>
+</head>
+<body>
+
+<script id="list_info_tbuser" type="text/x-handlebars-template">
+    {{#resultData_tbuser}}
+    <tr class="gradeA">
+        <td><font class="font_deleted_{{deleted}} chk_deleted_{{id}}">{{deleted}}</font></td>
+        <td><a href="/tbuser/detail/{{id}}">{{name}}</a></td>
+        <td>{{createdAt}} / {{modifiedAt}}</td>
+    </tr>
+    {{/resultData_tbuser}}
+</script>
+<script type="text/javascript">
+    var list_info_tbuser = $("#list_info_tbuser").html();
+    var list_info_tbuser_template = Handlebars.compile(list_info_tbuser);
+</script>
+
+deleted :
+<select id="detail_tbuser_deleted">
+    <option value="" selected="selected">전체</option>
+    <option value="N">일반</option>
+    <option value="Y">삭제</option>
+</select>
+name :
+<input id="detail_tbuser_name" type="text" />
+nick :
+<input id="detail_tbuser_nick" type="text" />
+gender :
+<input id="detail_tbuser_gender" type="text" />
+
+<button onclick="plist_tbuser()">list</button>
+
+<div>
+    총 글 등록수 : <font class="font_tbuser_listsize">-</font>
+</div>
+<div>
+    총 페이지 수 : <font class="font_tbuser_pagesize">-</font>
+</div>
+<div>
+    현재 페이지 : <font class="font_tbuser_callpage">-</font>
+</div>
+<div>
+    orderby :
+    <select id="search_tbuser_orderby" onchange="listener_search_changed(this);">
+        <option value="created_at" selected="selected">입력순</option>
+    </select>
+    orderway :
+    <select id="search_tbuser_orderway" onchange="listener_search_changed(this);">
+        <option value="desc" selected="selected">역방향</option>
+        <option value="asc">정방향</option>
+    </select>
+    callpage :
+        <input id="search_tbuser_callpage" type="number" value="1" onchange="listener_search_changed(this);"/>
+    perpage :
+    <select id="search_tbuser_perpage" onchange="listener_search_changed(this);">
+        <option value="2" selected="selected">2</option>
+        <option value="3">3</option>
+        <option value="10">10</option>
+    </select>
+</div>
+
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>삭제여부</th>
+                <th>이름</th>
+                <th>일시</th>
+            </tr>
+        </thead>
+        <tbody id="tbody_tbuser_list">
+        </tbody>
+    </table>
+    <div id="tfoot_tbuser_page">
+    </div>
+</div>
+<script>
+    $( document ).ready(function() {
+        console.log( "ready!" );
+        plist_tbuser();
+    });
+</script>
+<script>
+    function listener_call_page(obj){
+        $("#search_tbuser_callpage").val(obj);
+        plist_tbuser();
+    }
+    function listener_search_changed(obj){
+        let temp_id = $(obj).attr("id");
+        let temp_val = $(obj).val();
+        alert(temp_id + " : " + temp_val + "로 다시 검색합니다.")
+        plist_tbuser();
+    }
+    function plist_tbuser(){
+        $.ajax({
+            url: "/api/tbuser/plist",
+            type: "GET",
+            contentType : 'application/json; charset=utf-8',
+            data: {
+                deleted : $("#detail_tbuser_deleted").val()
+                , orderby : $("#search_tbuser_orderby").val()
+                , orderway : $("#search_tbuser_orderway").val()
+                , perpage : $("#search_tbuser_perpage").val()
+                , callpage : $("#search_tbuser_callpage").val()
+                , name : $("#detail_tbuser_name").val()
+                , nick : $("#detail_tbuser_nick").val()
+                , gender : $("#detail_tbuser_gender").val()
+            },
+            cache: false,
+            success: (data, status, xhr)=>{
+                //alert("success!!");
+                //alert(JSON.stringify(data));
+
+                $("#search_tbuser_callpage").val(data["callpage"]);
+                $(".font_tbuser_callpage").html(data["callpage"]);
+
+                $("#tfoot_tbuser_page").html("");
+                let callpage = Number(data["callpage"]);
+                let pagesize = Number(data["pagesize"]);
+                $("#tfoot_tbuser_page").append("<a href='javascript:listener_call_page("+callpage+")'>"+callpage+"</a>");
+                for(let i=0;i<5;i++){
+                    let before_page = (callpage - i - 1);
+                    if(before_page > 0){
+                        $("#tfoot_tbuser_page").prepend("<a href='javascript:listener_call_page("+before_page+")'>"+before_page+"</a>");
+                    }
+                }
+                $("#tfoot_tbuser_page").prepend("<a href='javascript:listener_call_page("+1+")'>맨앞페이지</a>");
+
+                for(let i=0;i<5;i++){
+                    let next_page = (callpage + i + 1);
+                    if(next_page <= pagesize){
+                       $("#tfoot_tbuser_page").append("<a href='javascript:listener_call_page("+next_page+")'>"+next_page+"</a>");
+                    }
+                }
+                $("#tfoot_tbuser_page").append("<a href='javascript:listener_call_page("+pagesize+")'>맨뒤페이지</a>");
+
+                $(".font_tbuser_listsize").html(data["listsize"]);
+                $(".font_tbuser_pagesize").html(data["pagesize"]);
+                $("#tbody_tbuser_list").html("");
+                let a_list = data.list;
+                $("#tbody_tbuser_list").append(list_info_tbuser_template({"resultData_tbuser":a_list}));
+
+            },
+            error: (data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(data));
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

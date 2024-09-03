@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        .hide{
+            display: none;
+        }
+        input:read-only{
+            background-color:#3d3d3d;
+        }
+    </style>
+</head>
+<body>
+username :
+<input type="text" id="create_tbuser_username" />
+<!--<button onclick="check_id()">ID 중복 체크</button>-->
+<button onclick="check_email()">이메일 확인</button>
+
+<div id="div_tbemail_confirm" class="hide">
+    인증번호 :
+    <input type="text" id="create_tbemail_number" />
+    <font class="font_tbemail_remain" style="margin-left : -35px">-</font>
+    <!--<div>남은 시간 <font class="font_tbemail_remain">-</font></div>-->
+    <button onclick="confirm_email()" style="margin-left:35px;">인증번호 확인</button>
+    <input type="hidden" id="input_tbemail_reamin" value="180"/>
+</div>
+
+
+password :
+<input type="text" id="create_tbuser_password" />
+
+<button onclick="signup_tbuser()">signup</button>
+<a href="/tbuser/mlist">link to Scroll list</a>
+
+<script>
+    let funcInterval = null;
+    //let timer = 180;
+    function listener_count(){
+        //특정 시간 간격으로 반복 실행되는 기능!
+        funcInterval = setInterval(funcTimer, 1000); //파라미터 첫번 째는 반복실행할 함수, 두번째는 반복할 주기(밀리세컨드 단위)
+        //1000 => 1초 입니닷!!
+    }
+    function funcTimer() {
+        let timer = Number($("#input_tbemail_reamin").val());//text => number 형태로 변환!
+        timer--;
+        $("#input_tbemail_reamin").val(timer);
+
+        let min = timer / 60;
+        //소수점 제거
+        //min = min.toFixed();
+        min = Math.floor(min);
+        let second_string = "";
+        let second = timer % 60;
+        if(second < 10){
+            second_string = "0" + second;
+        } else {
+            second_string = "" + second;
+        }
+        //console.log('a');
+        $(".font_tbemail_remain").text(min + ":" + second_string);
+        if(timer < 0){
+            funcIntervalClear();
+            $(".font_tbemail_remain").text("0:00");
+            $("#input_tbemail_reamin").val(0);
+        }
+    }
+    function funcIntervalClear() {
+        clearInterval(funcInterval);
+    }
+</script>
+<script>
+    function confirm_email(){
+        $.ajax({
+            url: "/api/tbuser/confirm",
+            type: "POST",
+            contentType : 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                username : $("#create_tbuser_username").val(),
+                number : $("#create_tbemail_number").val()
+            }),
+            cache: false,
+            success: (obj_data, status, xhr)=>{
+                let resultVal = obj_data["id"];
+                switch(resultVal){
+                    case "ok" :
+                        //여기는 중복 체크 통과!!
+                        alert("인증이 완료되었습니다.");
+                        $("#div_tbemail_confirm").addClass("hide");
+                        $("#create_tbuser_username").attr("readonly", true);
+                        break;
+                    default :
+                        alert("인증번호가 올바르지 않습니다.");
+                        break;
+                }
+            },
+            error: (obj_data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(obj_data));
+            }
+        });
+    }
+    function check_email(){
+        $.ajax({
+            url: "/api/tbuser/email",
+            type: "POST",
+            contentType : 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                username : $("#create_tbuser_username").val()
+            }),
+            cache: false,
+            success: (obj_data, status, xhr)=>{
+                let resultVal = obj_data["id"];
+                switch(resultVal){
+                    case "ok" :
+                        //여기는 중복 체크 통과!!
+                        alert("인증번호가 전송되었습니다. 이메일에서 확인해주세요!");
+                        $("#div_tbemail_confirm").removeClass("hide");
+                        listener_count();
+                        break;
+                    default :
+                        //여기는 중복되어서 더이상 진행 불가!
+                        alert("이미 사용중인 아이디 입니다.");
+                        $("#create_tbuser_username").val("");
+                        break;
+                }
+            },
+            error: (obj_data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(obj_data));
+            }
+        });
+    }
+    function check_id(){
+        $.ajax({
+            url: "/api/tbuser/id",
+            type: "POST",
+            contentType : 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                username : $("#create_tbuser_username").val()
+            }),
+            cache: false,
+            success: (obj_data, status, xhr)=>{
+                //alert("success!!");
+                let resultVal = obj_data["id"];
+                switch(resultVal){
+                    case "ok" :
+                        //여기는 중복 체크 통과!!
+                        alert("가입 가능한 아이디 입니다.");
+                        $("#create_tbuser_username").attr("readonly", true);
+                        break;
+                    case "not" :
+                        //여기는 불가능한 아이디임..
+                        alert("가입 불가능한 아이디 입니다.");
+                        $("#create_tbuser_username").val("");
+                        break;
+                    default :
+                        //여기는 중복되어서 더이상 진행 불가!
+                        alert("이미 사용중인 아이디 입니다.");
+                        $("#create_tbuser_username").val("");
+                        break;
+                }
+            },
+            error: (obj_data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(obj_data));
+            }
+        });
+    }
+    function signup_tbuser(){
+        $.ajax({
+            url: "/api/tbuser/signup",
+            type: "POST",
+            contentType : 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                username : $("#create_tbuser_username").val()
+                ,password : $("#create_tbuser_password").val()
+            }),
+            cache: false,
+            success: (data, status, xhr)=>{
+                alert("success!!");
+                //alert(JSON.stringify(data));
+            },
+            error: (data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(data));
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

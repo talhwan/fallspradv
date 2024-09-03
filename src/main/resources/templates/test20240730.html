@@ -1,0 +1,174 @@
+<html>
+    <head>
+        <!--머리라고 생각하면 됨.-->
+        <meta charset="UTF-8">
+        <title>index</title>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <style>
+            #div_01{
+                color : blue;
+                cursor: pointer;
+            }
+            #div_02{
+                color : indianred;
+            }
+            .div_0{
+                font-weight: bold;
+            }
+
+            table, th, td {
+                border: 1px solid;
+            }
+        </style>
+
+    </head>
+    <body>
+        <!--눈에 보여지는 공간-->
+
+
+        <!--<table>
+            <thead>
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+        </table>-->
+
+        <table style="width:100%">
+            <thead>
+                <tr>
+                    <th>1</th>
+                    <th>1</th>
+                    <th>1</th>
+                    <th>1</th>
+                    <th>1</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="3">1</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td id="td_tbpost_title">-</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td colspan="3">10</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>9</td>
+                    <td>9</td>
+                    <td>10</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div id="div_01" class="div_0" onclick="create_tbpost('제목1', '내용1');">
+            112223333
+        </div>
+        <div id="div_02" class="div_0" onclick="check_inner(this);">
+            444555666
+        </div>
+        <script>
+        function create_tbpost(param1, param2){
+            alert(param1);
+            alert(param2);
+        }
+        function check_inner(param){
+            alert($(param).attr("id"));
+            alert($(param).attr("class"));
+            alert($(param).html());
+            $(param).html("바뀐 내용1!!");
+            alert($(param).html());
+            //$(param).text("바뀐 내용2!!");
+        }
+        </script>
+
+        <input type="text" id="create_tbpost_title" class="input_tbpost" placeholder="제목을 입력하세요!" onkeyup="alert('플레이어')" onchange="alert('변우석')"/>
+        <input type="text" id="create_tbpost_content" class="input_tbpost" placeholder="내용을 입력하세요!" />
+        <input type="date" id="create_tbpost_date" class="input_tbpost" placeholder="내용을 입력하세요!" />
+        <select id="create_tbpost_gender">
+            <option value="F">여</option>
+            <option value="M">남</option>
+        </select>
+
+
+        <button onclick="func_title()">제목 확인!</button>
+        <button onclick="func_all()">다 확인!</button>
+        <button onclick="func_gender()">?! 확인!</button>
+        <script>
+        let t_type = $("#create_tbpost_title").attr("type");
+        //alert(t_type);
+        function func_gender() {
+            alert($("#create_tbpost_gender").val());
+        }
+        function func_title() {
+            let t_value = $("#create_tbpost_title").val();
+            alert(t_value);
+            $("#td_tbpost_title").text(t_value);
+        }
+        function func_all() {
+            let t_values = $(".input_tbpost");
+            alert(t_values.length);
+            for(let each of t_values){
+                alert($(each).val());
+            }
+            for(let i=0;i<t_values.length;i++){
+                alert($(t_values[i]).val());
+            }
+        }
+        </script>
+
+        <h1>글자 클꺼임</h1>
+        <h2>글자 클꺼임</h2>
+
+        <p>11223344tarthrherh</p>
+        <p>11223344tarthrherh</p>
+        <p>11223344tarthrherh</p>
+        <p>11223344tarthrherh</p>
+
+        <a href="https://www.naver.com/" target="_blank">a태그 입니다.</a>
+        <a href="javascript:alert(1111);">a태그인데 버튼처럼 쓰자요!!.</a>
+        <button onclick="alert(2);">버튼</button>
+        <ol>
+            <li>1122</li>
+            <li>1122</li>
+            <li>1122</li>
+        </ol>
+        <ul>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+        </ul>
+
+
+        <script>
+        let abc = "123";
+        //alert(abc);
+        let tempValue = fn_abc();
+        //alert(tempValue);
+
+        function fn_abc(){
+            let sum = 0;
+            for(let i=0;i<100;i++){
+                sum += i;
+            }
+            //alert(sum);
+            return sum;
+        }
+        </script>
+    </body>
+</html>

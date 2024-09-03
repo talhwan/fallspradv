@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        class="light-style customizer-hide"
+        dir="ltr"
+        data-theme="theme-default"
+        data-assets-path="/resources/nowfront/assets/"
+        data-template="vertical-menu-template-free"
+>
+<head>
+    <meta charset="utf-8" />
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
+    <title>회원 가입</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/resources/nowfront/assets/img/favicon/favicon.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+            rel="stylesheet"
+    />
+
+    <!-- Icons. Uncomment required icon fonts -->
+    <link rel="stylesheet" href="/resources/nowfront/assets/vendor/fonts/boxicons.css" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="/resources/nowfront/assets/vendor/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="/resources/nowfront/assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="/resources/nowfront/assets/css/demo.css" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="/resources/nowfront/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+
+    <!-- Page CSS -->
+    <!-- Page -->
+    <link rel="stylesheet" href="/resources/nowfront/assets/vendor/css/pages/page-auth.css" />
+    <!-- Helpers -->
+    <script src="/resources/nowfront/assets/vendor/js/helpers.js"></script>
+
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="/resources/nowfront/assets/js/config.js"></script>
+</head>
+
+<body>
+<!-- Content -->
+
+<div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner">
+            <!-- Register Card -->
+            <div class="card">
+                <div class="card-body">
+                    <!-- Logo -->
+                    <div class="app-brand justify-content-center">
+                        <a href="/index" class="app-brand-link gap-2">
+                            <span class="app-brand-text demo text-body fw-bolder">HGU</span>
+                        </a>
+                    </div>
+                    <!-- /Logo -->
+                    <h4 class="mb-2">Why not change the world?! 🚀</h4>
+                    <p class="mb-4">hahah!!</p>
+
+                    <div class="mb-3">
+                        <div class="mb-3">
+                            <label for="create_tbuser_username" class="form-label">Username</label>
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    id="create_tbuser_username"
+                                    name="username"
+                                    placeholder="Enter your username"
+                                    autofocus
+                            />
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-sm btn-outline-dark" onclick="check_email()">이메일 확인</button>
+                        </div>
+                        <div class="mb-3">
+                            <label for="create_tbemail_number" class="form-label">인증번호</label>
+                            <input type="text" class="form-control" id="create_tbemail_number" name="email" placeholder="Enter your email" />
+                            <font class="font_tbemail_remain">-</font>
+                            <input type="hidden" id="input_tbemail_reamin" value="180"/>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-sm btn-outline-dark" onclick="confirm_email()">인증번호 확인</button>
+                        </div>
+                        <div class="mb-3 form-password-toggle">
+                            <label class="form-label" for="create_tbuser_password">Password</label>
+                            <div class="input-group input-group-merge">
+                                <input
+                                        type="password"
+                                        id="create_tbuser_password"
+                                        class="form-control"
+                                        name="password"
+                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                        aria-describedby="password"
+                                />
+                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="terms-conditions" name="terms" />
+                                <label class="form-check-label" for="terms-conditions">
+                                    I agree to
+                                    <a href="javascript:void(0);">privacy policy & terms</a>
+                                </label>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary d-grid w-100" onclick="signup_tbuser()">Sign up</button>
+                    </div>
+
+                    <p class="text-center">
+                        <span>Already have an account?</span>
+                        <a href="auth-login-basic.html">
+                            <span>Sign in instead</span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <!-- Register Card -->
+        </div>
+    </div>
+</div>
+
+<!-- / Content -->
+
+<!-- Core JS -->
+<!-- build:js assets/vendor/js/core.js -->
+<script src="/resources/nowfront/assets/vendor/libs/jquery/jquery.js"></script>
+<script src="/resources/nowfront/assets/vendor/libs/popper/popper.js"></script>
+<script src="/resources/nowfront/assets/vendor/js/bootstrap.js"></script>
+<script src="/resources/nowfront/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+
+<script src="/resources/nowfront/assets/vendor/js/menu.js"></script>
+<!-- endbuild -->
+
+<!-- Vendors JS -->
+
+<!-- Main JS -->
+<script src="/resources/nowfront/assets/js/main.js"></script>
+
+<!-- Page JS -->
+
+<!-- Place this tag in your head or just before your close body tag. -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+
+<script>
+    let funcInterval = null;
+    //let timer = 180;
+    function listener_count(){
+        //특정 시간 간격으로 반복 실행되는 기능!
+        funcInterval = setInterval(funcTimer, 1000); //파라미터 첫번 째는 반복실행할 함수, 두번째는 반복할 주기(밀리세컨드 단위)
+        //1000 => 1초 입니닷!!
+    }
+    function funcTimer() {
+        let timer = Number($("#input_tbemail_reamin").val());//text => number 형태로 변환!
+        timer--;
+        $("#input_tbemail_reamin").val(timer);
+
+        let min = timer / 60;
+        //소수점 제거
+        //min = min.toFixed();
+        min = Math.floor(min);
+        let second_string = "";
+        let second = timer % 60;
+        if(second < 10){
+            second_string = "0" + second;
+        } else {
+            second_string = "" + second;
+        }
+        //console.log('a');
+        $(".font_tbemail_remain").text(min + ":" + second_string);
+        if(timer < 0){
+            funcIntervalClear();
+            $(".font_tbemail_remain").text("0:00");
+            $("#input_tbemail_reamin").val(0);
+        }
+    }
+    function funcIntervalClear() {
+        clearInterval(funcInterval);
+    }
+</script>
+<script>
+    function confirm_email(){
+        $.ajax({
+            url: "/api/tbuser/confirm",
+            type: "POST",
+            contentType : 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                username : $("#create_tbuser_username").val(),
+                number : $("#create_tbemail_number").val()
+            }),
+            cache: false,
+            success: (obj_data, status, xhr)=>{
+                let resultVal = obj_data["id"];
+                switch(resultVal){
+                    case "ok" :
+                        //여기는 중복 체크 통과!!
+                        alert("인증이 완료되었습니다.");
+                        $("#div_tbemail_confirm").addClass("hide");
+                        $("#create_tbuser_username").attr("readonly", true);
+                        break;
+                    default :
+                        alert("인증번호가 올바르지 않습니다.");
+                        break;
+                }
+            },
+            error: (obj_data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(obj_data));
+            }
+        });
+    }
+    function check_email(){
+        $.ajax({
+            url: "/api/tbuser/email",
+            type: "POST",
+            contentType : 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                username : $("#create_tbuser_username").val()
+            }),
+            cache: false,
+            success: (obj_data, status, xhr)=>{
+                let resultVal = obj_data["id"];
+                switch(resultVal){
+                    case "ok" :
+                        //여기는 중복 체크 통과!!
+                        alert("인증번호가 전송되었습니다. 이메일에서 확인해주세요!");
+                        $("#div_tbemail_confirm").removeClass("hide");
+                        listener_count();
+                        break;
+                    default :
+                        //여기는 중복되어서 더이상 진행 불가!
+                        alert("이미 사용중인 아이디 입니다.");
+                        $("#create_tbuser_username").val("");
+                        break;
+                }
+            },
+            error: (obj_data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(obj_data));
+            }
+        });
+    }
+    function check_id(){
+        $.ajax({
+            url: "/api/tbuser/id",
+            type: "POST",
+            contentType : 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                username : $("#create_tbuser_username").val()
+            }),
+            cache: false,
+            success: (obj_data, status, xhr)=>{
+                //alert("success!!");
+                let resultVal = obj_data["id"];
+                switch(resultVal){
+                    case "ok" :
+                        //여기는 중복 체크 통과!!
+                        alert("가입 가능한 아이디 입니다.");
+                        $("#create_tbuser_username").attr("readonly", true);
+                        break;
+                    case "not" :
+                        //여기는 불가능한 아이디임..
+                        alert("가입 불가능한 아이디 입니다.");
+                        $("#create_tbuser_username").val("");
+                        break;
+                    default :
+                        //여기는 중복되어서 더이상 진행 불가!
+                        alert("이미 사용중인 아이디 입니다.");
+                        $("#create_tbuser_username").val("");
+                        break;
+                }
+            },
+            error: (obj_data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(obj_data));
+            }
+        });
+    }
+    function signup_tbuser(){
+        $.ajax({
+            url: "/api/tbuser/signup",
+            type: "POST",
+            contentType : 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                username : $("#create_tbuser_username").val()
+                ,password : $("#create_tbuser_password").val()
+            }),
+            cache: false,
+            success: (data, status, xhr)=>{
+                alert("success!!");
+                //alert(JSON.stringify(data));
+            },
+            error: (data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(data));
+            }
+        });
+    }
+</script>
+</body>
+</html>

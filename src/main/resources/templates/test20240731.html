@@ -1,0 +1,99 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>index</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    </head>
+    <body>
+
+        <div id="div_today" class="div_date" style="padding:100px;margin:50px;border: 1px solid;">2024-07-31</div>
+
+        <input type="text" id="input_text1" onchange="listener_input_changed(this)"/>
+        <input type="number" id="input_number1" onchange="listener_input_changed(this)"/>
+        <input type="date" id="input_date1" onchange="listener_input_changed(this)"/>
+        <input type="time" id="input_time1" onchange="listener_input_changed(this)"/>
+
+        <input type="checkbox" id="input_checkbox1" onchange="listener_input_checkbox(this)"/>
+
+        <button onclick="change_value()">강제로 값 채우기</button>
+        <button onclick="change_checkbox()">강제로 체크박스 채우기</button>
+        <script>
+        function change_value(){
+            $("#input_text1").val("1122334455");
+        }
+        function change_checkbox(){
+            $("#input_checkbox1").prop("checked", true);
+        }
+        function listener_input_changed(obj){
+            alert($(obj).val());
+        }
+        function listener_input_checkbox(obj){
+            alert($(obj).prop("checked"));
+        }
+        </script>
+
+
+        <div>
+            <input type="hidden" id="create_tbpost_lang" />
+            <input type="radio" id="html" name="fav_language" value="HTML" onchange="listener_input_radio()">
+            <label for="html">HTML</label><br>
+            <input type="radio" id="css" name="fav_language" value="CSS" onchange="listener_input_radio()">
+            <label for="css">CSS</label><br>
+            <input type="radio" id="javascript" name="fav_language" value="JavaScript" onchange="listener_input_radio()">
+            <label for="javascript">JAVASCRIPT</label><br>
+        </div>
+        <button onclick="change_radio()">강제로 라디오 채우기</button>
+
+    <script>
+        function listener_input_radio(){
+           //alert($("input:radio[name='fav_language']:checked").val());
+            $("#create_tbpost_lang").val($("input:radio[name='fav_language']:checked").val());
+        }
+        function change_radio(){
+            $("input:radio[name=fav_language]:input[value='HTML']").attr("checked", true);
+            listener_input_radio();
+        }
+    </script>
+
+    강제로 내용 추가
+    <div id="append_test">
+    </div>
+        <button onclick="div_append()">강제로 내용 채우기1</button>
+        <button onclick="div_prepend()">강제로 내용 채우기2</button>
+    <script>
+        function div_append(){
+            $("#append_test").append(
+                "<div>"+$("input:radio[name='fav_language']:checked").val()+"</div>"
+            );
+        }
+        function div_prepend(){
+            $("#append_test").prepend(
+                "<div>"+$("input:radio[name='fav_language']:checked").val()+"</div>"
+            );
+        }
+    </script>
+<br/>
+<br/>
+<br/>
+<br/>
+        강제로 테이블 로우 추가
+    <table>
+        <tbody id="append_tbody">
+        </tbody>
+    </table>
+        <button onclick="table_append()">강제로 내용 채우기</button>
+    <script>
+        function table_append(){
+            //let div = $("div");
+            $("#append_tbody").append(
+                "<tr>" +
+                "<td><input type=\"text\" class=\"create_123\" /></td>" +
+                "<td><input type=\"text\" class=\"create_123\" /></td>" +
+                "<td><input type=\"text\" class=\"create_123\" /></td>" +
+                "</tr>"
+            );
+        }
+    </script>
+
+    </body>
+</html>

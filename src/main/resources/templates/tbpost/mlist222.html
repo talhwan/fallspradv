@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.8/handlebars.min.js"></script>
+</head>
+<body>
+
+<script id="list_info_tbpostcmt" type="text/x-handlebars-template">
+    {{#resultData_tbpostcmt}}
+    <tr class="gradeA">
+        <td><font class="font_deleted_{{deleted}} chk_deleted_{{id}}">{{deleted}}</font></td>
+        <td>{{tbuserNick}}</td>
+        <td><a href="/tbpostcmt/detail/{{id}}">{{title}}</a></td>
+        <td>{{createdAt}} / {{modifiedAt}}
+        <input type="hidden" class="input_tbpostcmt_created_at" value="{{createdAt}}"/>
+        <input type="hidden" class="input_tbpostcmt_title" value="{{title}}"/>
+        </td>
+    </tr>
+    {{/resultData_tbpostcmt}}
+</script>
+<script type="text/javascript">
+    var list_info_tbpostcmt = $("#list_info_tbpostcmt").html();
+    var list_info_tbpostcmt_template = Handlebars.compile(list_info_tbpostcmt);
+</script>
+
+deleted :
+<select id="detail_tbpostcmt_deleted" onchange="listener_search_changed(this);">
+    <option value="" selected="selected">전체</option>
+    <option value="N">일반</option>
+    <option value="Y">삭제</option>
+</select>
+tbuserId :
+<input id="detail_tbpostcmt_tbuserId" type="text" onchange="listener_search_changed(this);">
+title :
+<input id="detail_tbpostcmt_title" type="text" onchange="listener_search_changed(this);">
+
+<button onclick="mlist_tbpostcmt()">list</button>
+
+<div>
+    총 글 등록수 : <font class="font_tbpostcmt_listsize">-</font>
+</div>
+<div>
+    총 페이지 수 : <font class="font_tbpostcmt_pagesize">-</font>
+</div>
+<div>
+    orderby :
+    <select id="search_tbpostcmt_orderby" onchange="listener_search_changed(this);">
+        <option value="created_at" selected="selected">입력순</option>
+        <option value="title">제목순</option>
+    </select>
+    orderway :
+    <select id="search_tbpostcmt_orderway" onchange="listener_search_changed(this);">
+        <option value="desc" selected="selected">역방향</option>
+        <option value="asc">정방향</option>
+    </select>
+    cursor :
+        <input id="search_tbpostcmt_cursor" type="text" value="" />
+    perpage :
+    <select id="search_tbpostcmt_perpage" onchange="listener_search_changed(this);">
+        <option value="2" selected="selected">2</option>
+        <option value="3">3</option>
+        <option value="10">10</option>
+    </select>
+</div>
+
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>삭제여부</th>
+                <th>작성자</th>
+                <th>제목</th>
+                <th>일시</th>
+            </tr>
+        </thead>
+        <tbody id="tbody_tbpostcmt_list">
+        </tbody>
+    </table>
+</div>
+<script>
+    $( document ).ready(function() {
+        console.log( "ready!" );
+        mlist_tbpostcmt();
+    });
+</script>
+<script>
+    function listener_search_changed(obj){
+        let temp_id = $(obj).attr("id");
+        let temp_val = $(obj).val();
+        $("#search_tbpostcmt_cursor").val("");
+        $("#tbody_tbpostcmt_list").html("");
+        alert(temp_id + " : " + temp_val + "로 다시 검색합니다.");
+        mlist_tbpostcmt();
+    }
+    function mlist_tbpostcmt(){
+
+        let orderby = $("#search_tbpostcmt_orderby").val();
+        let orderway = $("#search_tbpostcmt_orderway").val();
+
+        let cursor = "";
+        let input_tbpostcmt_data_cursor = null;
+        if(orderby === "created_at"){
+            input_tbpostcmt_data_cursor = $(".input_tbpostcmt_created_at");
+        } else if(orderby === "title"){
+            input_tbpostcmt_data_cursor = $(".input_tbpostcmt_title");
+        }
+        if(input_tbpostcmt_data_cursor != null && input_tbpostcmt_data_cursor.length > 0){
+            cursor = $(input_tbpostcmt_data_cursor[input_tbpostcmt_data_cursor.length - 1]).val();
+        }
+
+        $("#search_tbpostcmt_cursor").val(cursor);
+
+        $.ajax({
+            url: "/api/tbpostcmt/mlist",
+            type: "GET",
+            contentType : 'application/json; charset=utf-8',
+            data: {
+                deleted : $("#detail_tbpostcmt_deleted").val()
+                , orderby : orderby
+                , orderway : orderway
+                , perpage : $("#search_tbpostcmt_perpage").val()
+                , cursor : $("#search_tbpostcmt_cursor").val()
+                , tbuserId : $("#detail_tbpostcmt_tbuserId").val()
+                , title : $("#detail_tbpostcmt_title").val()
+            },
+            cache: false,
+            success: (data, status, xhr)=>{
+                //alert("success!!");
+                //alert(JSON.stringify(data));
+                let a_list = data;
+                $("#tbody_tbpostcmt_list").append(list_info_tbpostcmt_template({"resultData_tbpostcmt":a_list}));
+            },
+            error: (data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(data));
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

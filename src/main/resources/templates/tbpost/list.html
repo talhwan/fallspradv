@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.8/handlebars.min.js"></script>
+</head>
+<body>
+
+<script id="list_info_tbpost" type="text/x-handlebars-template">
+    {{#resultData_tbpost}}
+    <tr class="gradeA">
+        <td><font class="font_tbpost_order">-</font></td>
+        <td><font class="font_deleted_{{deleted}} chk_deleted_{{id}}">{{deleted}}</font></td>
+        <td><a href="/tbpost/detail/{{id}}">{{title}}</a></td>
+        <td>{{createdAt}} / {{modifiedAt}}</td>
+    </tr>
+    {{/resultData_tbpost}}
+</script>
+<script type="text/javascript">
+    var list_info_tbpost = $("#list_info_tbpost").html();
+    var list_info_tbpost_template = Handlebars.compile(list_info_tbpost);
+</script>
+
+deleted :
+<select id="detail_tbpost_deleted">
+    <option value="" selected="selected">전체</option>
+    <option value="N">일반</option>
+    <option value="Y">삭제</option>
+</select>
+title :
+<input id="detail_tbpost_title" type="text" />
+author :
+<input id="detail_tbpost_author" type="text" />
+
+<button onclick="list_tbpost()">list</button>
+
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>삭제여부</th>
+                <th>제목</th>
+                <th>일시</th>
+            </tr>
+        </thead>
+        <tbody id="tbody_tbpost_list">
+        </tbody>
+    </table>
+</div>
+<script>
+    $( document ).ready(function() {
+        console.log( "ready!" );
+        list_tbpost();
+    });
+</script>
+<script>
+    function list_tbpost(){
+        $.ajax({
+            url: "/api/tbpost/list",
+            type: "GET",
+            contentType : 'application/json; charset=utf-8',
+            data: {
+                deleted : $("#detail_tbpost_deleted").val()
+                , title : $("#detail_tbpost_title").val()
+                , author : $("#detail_tbpost_author").val()
+            },
+            cache: false,
+            success: (data, status, xhr)=>{
+                //alert("success!!");
+                //alert(JSON.stringify(data));
+                $("#tbody_tbpost_list").html("");
+                let a_list = data;
+                $("#tbody_tbpost_list").append(list_info_tbpost_template({"resultData_tbpost":a_list}));
+
+                let font_tbpost_order = $(".font_tbpost_order");
+                for(let i=0;i<font_tbpost_order.length;i++){
+                    $(font_tbpost_order[i]).text((i+1));
+                }
+
+
+            },
+            error: (data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(data));
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

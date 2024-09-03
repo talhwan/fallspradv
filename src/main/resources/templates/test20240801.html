@@ -1,0 +1,84 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>index</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    </head>
+    <body>
+
+        <div id="div_today" class="div_date" style="padding:100px;margin:50px;border: 1px solid;">2024-08-01</div>
+
+        <input type="text" id="input_text1" onchange="listener_input_changed(this)" disabled="disabled"/>
+        <input type="text" id="input_text2" onchange="listener_input_changed(this)" readonly="readonly"/>
+        <input type="number" id="input_number1" onchange="listener_input_changed(this)"/>
+        <input type="date" id="input_date1" onchange="listener_input_changed(this)" disabled="disabled"/>
+        <input type="time" id="input_time1" onchange="listener_input_changed(this)" readonly="readonly"/>
+
+
+        <div>
+            email :
+            <input type="email" id="input_email1"/>
+
+            <button onclick="check_id();">
+                중복 체크
+            </button>
+        </div>
+
+
+        <style>
+            input:read-only{
+                background-color:yellow;
+            }
+        </style>
+
+        <button onclick="listener_input_readonly()">
+            강제로 리드온리 만들기
+        </button>
+        <button onclick="listener_input_value()">
+            강제로 리드온리 값 배정
+        </button>
+
+        <script>
+            function check_id(){
+                let temp_email = $("#input_email1").val();
+
+                let email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+                if(email_regex.test(temp_email)){
+                    alert("만족!!");
+                } else {
+                    alert("불만족!!");
+                    return false;
+                }
+                if ($.trim(temp_email) === "") {
+                    alert('빈칸을 채워주세요!');
+                } else {
+                    //중복체크하는 기능을 만들어 준다음에,
+                    if(temp_email === "admin"){
+                        alert("이미 사용중인 아이디 입니다!");
+                        $("#input_email1").val("");
+                    } else {
+                        $("#input_email1").attr("readonly", true);
+                    }
+                }
+                //$("#input_text2").val("hahaha2!!");
+            }
+            function listener_input_value(){
+                $("#input_text1").val("hahaha1!!");
+                $("#input_text2").val("hahaha2!!");
+            }
+            function listener_input_readonly(){
+                /*let tempVal = $("#input_text1").val();
+                alert(tempVal);*/
+
+                $("#input_text1").attr("readonly", true);
+            }
+        </script>
+
+
+    <script>
+
+    </script>
+
+
+    </body>
+</html>
