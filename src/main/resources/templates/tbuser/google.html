@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+
+<body style="height:100vh;text-align:center;margin: 0;background-color: #3d3d3d;">
+<div id="div_main">
+
+    <div>
+        =========================================
+        <input type="hidden1" id="tempToken" th:value="${token}" />
+        <div th:text="${token}">-</div>
+        =========================================
+    </div>
+</div>
+
+<body th:replace="~{@{includes/user/bottom}}"></body>
+<script>
+    let tempToken = $("#tempToken").val();
+    alert(tempToken);
+
+</script>
+
+</body>
+</html>
+
