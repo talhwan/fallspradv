@@ -7,6 +7,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.thc.fallspradv.exception.NoAuthorizationException;
 import com.thc.fallspradv.util.WebConnect;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -74,6 +75,13 @@ public class TbuserController {
             //logger.info("payload ID: " + payload);
             String username = payload.get("email") + "";
             String password = payload.get("sub") + "";
+
+            //만약에 한동대생으로만 로그인하게 해줄려면
+            if(username.endsWith("@handong.ac.kr")){
+                //로그인 처리 해주기!
+            } else {
+                throw new NoAuthorizationException("");
+            }
 
             System.out.println(username + "////" + password);
             model.addAttribute("token", username);
