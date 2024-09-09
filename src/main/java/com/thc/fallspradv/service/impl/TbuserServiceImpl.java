@@ -153,6 +153,9 @@ public class TbuserServiceImpl implements TbuserService {
         Tbuser tbuser = tbuserRepository.findByUsernameAndPassword(param.getUsername(), param.getPassword());
         if(tbuser == null){ return TbuserDto.CreateResDto.builder().id("not matched").build(); }
 
+        //로그인에 성공했을 경우!
+        // 리프레쉬 토큰을 만들어서 리턴해준다!
+
         return TbuserDto.CreateResDto.builder().id("login").build();
     }
 

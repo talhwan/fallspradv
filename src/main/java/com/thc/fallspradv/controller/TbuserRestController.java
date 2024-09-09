@@ -102,6 +102,16 @@ public class TbuserRestController {
     public ResponseEntity<TbuserDto.CreateResDto> id(@Valid @RequestBody TbuserDto.UidReqDto param){
         return ResponseEntity.status(HttpStatus.CREATED).body(tbuserService.id(param));
     }
+    @Operation(summary = "사용자 로그인",
+            description = "사용자 로그인 컨트롤러 <br />"
+                    + "@param TbuserDto.LoginReqDto <br />"
+                    + "@return HttpStatus.CREATED(201) ResponseEntity\\<TbuserDto.CreateResDto\\> <br />"
+                    + "@exception 필수 파라미터 누락하였을 때 등 <br />"
+    )
+    @PostMapping("/login")
+    public ResponseEntity<TbuserDto.CreateResDto> login(@Valid @RequestBody TbuserDto.LoginReqDto param){
+        return ResponseEntity.status(HttpStatus.CREATED).body(tbuserService.login(param));
+    }
     */
     @Operation(summary = "사용자 로그인",
             description = "사용자 로그인 컨트롤러 <br />"

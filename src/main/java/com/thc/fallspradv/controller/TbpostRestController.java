@@ -6,7 +6,10 @@ import com.thc.fallspradv.service.TbpostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,8 @@ import java.util.List;
 @RequestMapping("/api/tbpost")
 @RestController
 public class TbpostRestController {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final TbpostService tbpostService;
     public TbpostRestController(TbpostService tbpostService) {
@@ -87,7 +92,11 @@ public class TbpostRestController {
                     + "@exception 필수 파라미터 누락하였을 때 등 <br />"
     )
     @GetMapping("/mlist")
-    public ResponseEntity<List<TbpostDto.DetailResDto>> mlist(@Valid TbpostDto.ScrollListReqDto param){
+    public ResponseEntity<List<TbpostDto.DetailResDto>> mlist(@Valid TbpostDto.ScrollListReqDto param
+            , HttpServletRequest request, HttpServletResponse response
+    ){
+        logger.info("reqTest : " + request.getAttribute("reqTest"));
+        logger.info("resTest : " + response.getHeader("resTest"));
         return ResponseEntity.status(HttpStatus.OK).body(tbpostService.scrollList(param));
     }
 
