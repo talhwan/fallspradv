@@ -9,6 +9,7 @@ import com.thc.fallspradv.service.TbuserService;
 import com.thc.fallspradv.util.AES256Cipher;
 import com.thc.fallspradv.util.NowDate;
 import com.thc.fallspradv.util.SendEmail;
+import com.thc.fallspradv.util.TokenFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,14 @@ public class TbuserServiceImpl implements TbuserService {
         return newPw;
     }
 
+    @Override
+    public TbuserDto.CreateResDto access(String param) throws Exception {
+        //리프레쉬 토큰으로 유효한지 확인
+        TokenFactory tokenFactory = new TokenFactory();
+        String tbuserId = tokenFactory.issueAccessToken(param);
+        
+        return null;
+    }
     @Override
     public TbuserDto.CreateResDto logout(DefaultDto.DetailReqDto param){
         return TbuserDto.CreateResDto.builder().id("logout").build();
@@ -155,8 +164,10 @@ public class TbuserServiceImpl implements TbuserService {
 
         //로그인에 성공했을 경우!
         // 리프레쉬 토큰을 만들어서 리턴해준다!
+        TokenFactory tokenFactory = new TokenFactory();
+        String refreshToken = tokenFactory.issueRefreshToken(tbuser.getId());
 
-        return TbuserDto.CreateResDto.builder().id("login").build();
+        return TbuserDto.CreateResDto.builder().id(refreshToken).build();
     }
 
     @Override

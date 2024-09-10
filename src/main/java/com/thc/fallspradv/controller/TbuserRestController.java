@@ -25,6 +25,11 @@ public class TbuserRestController {
         this.tbuserService = tbuserService;
     }
 
+    @PostMapping("/access")
+    public ResponseEntity<TbuserDto.CreateResDto> access(@Valid @RequestBody String refreshToken) throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(tbuserService.access(refreshToken));
+    }
+
     @Operation(summary = "사용자 로그아웃(사용자만 접근 가능)",
             description = "사용자 로그아웃 컨트롤러 <br />"
                     + "@param TbuserDto.DetailReqDto <br />"

@@ -11,8 +11,13 @@ username :
 <input type="text" id="create_tbuser_username" />
 password :
 <input type="text" id="create_tbuser_password" />
-
 <button onclick="login()">login</button>
+<br/>
+<br/>
+refreshToken :
+<input type="text" id="create_tbuser_refreshToken" />
+<button onclick="access()">access</button>
+
 
 
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
@@ -68,10 +73,29 @@ password :
                     alert("아이디와 비밀번호가 올바르지 않습니다.");
                 } else {
                     alert(JSON.stringify(obj_data));
+
+                    $("#create_tbuser_refreshToken").val(obj_data["id"]);
+
                     //generateAccessToken(obj_data["id"]);
                     //location.replace("/index");
                 }
                 //alert(JSON.stringify(data));
+            },
+            error: (obj_data, status, xhr)=>{
+                alert("error!!");
+                alert(JSON.stringify(obj_data));
+            }
+        });
+    }
+    function access(){
+        $.ajax({
+            url: "/api/tbuser/access",
+            type: "POST",
+            contentType : 'application/json; charset=utf-8',
+            data: $("#create_tbuser_refreshToken").val(),
+            cache: false,
+            success: (obj_data, status, xhr)=>{
+                alert(JSON.stringify(obj_data));
             },
             error: (obj_data, status, xhr)=>{
                 alert("error!!");

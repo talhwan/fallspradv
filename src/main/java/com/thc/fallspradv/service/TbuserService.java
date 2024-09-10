@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface TbuserService {
 
+    TbuserDto.CreateResDto access(String param) throws Exception;
     TbuserDto.CreateResDto logout(DefaultDto.DetailReqDto param);
 
     /*
