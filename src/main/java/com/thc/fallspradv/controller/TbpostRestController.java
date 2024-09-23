@@ -39,7 +39,9 @@ public class TbpostRestController {
                     + "@exception 필수 파라미터 누락하였을 때 등 <br />"
     )
     @PostMapping("")
-    public ResponseEntity<TbpostDto.CreateResDto> create(@Valid @RequestBody TbpostDto.CreateReqDto param){
+    public ResponseEntity<TbpostDto.CreateResDto> create(@Valid @RequestBody TbpostDto.CreateReqDto param, HttpServletRequest request){
+        logger.info("reqTbuserId : " + request.getAttribute("reqTbuserId"));
+        param.setTbuserId(request.getAttribute("reqTbuserId") + "");
         return ResponseEntity.status(HttpStatus.CREATED).body(tbpostService.create(param));
     }
 

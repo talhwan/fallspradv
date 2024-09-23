@@ -13,8 +13,11 @@
 			,tbpost.title
 			,tbpost.content
 			,tbpost.author
-		FROM tbpost
+			,tbpost.tbuser_id as tbuserId
+			, tbuser.name as tbuserName
+		FROM tbpost, tbuser
 		WHERE tbpost.id = #{id}
+		  AND tbpost.tbuser_id = tbuser.id
 	</select>
 	<select id="list" parameterType="hashMap" resultType="com.thc.fallspradv.dto.TbpostDto$DetailResDto">
 		SELECT tbpost.id

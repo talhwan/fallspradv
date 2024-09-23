@@ -29,8 +29,10 @@ public class TbpostDto {
         @NotEmpty
         private String author;
 
+        private String tbuserId;
+
         public Tbpost toEntity(){
-            return Tbpost.of(title, content, author);
+            return Tbpost.of(title, content, author, tbuserId);
         }
     }
     @Builder
@@ -69,6 +71,10 @@ public class TbpostDto {
         private String content;
         @Schema(description = "author", example="")
         private String author;
+        @Schema(description = "tbuserId", example="")
+        private String tbuserId;
+        @Schema(description = "tbuserName", example="")
+        private String tbuserName;
     }
 
     @SuperBuilder

@@ -22,7 +22,7 @@ public class DefaultInterceptor implements HandlerInterceptor {
         logger.info("preHandle / resTest [{}]", response.getHeader("resTest"));
         */
         //logger.info("preHandle / refreshToken [{}]", request.getHeader("refreshToken"));
-        logger.info("preHandle / accessToken [{}]", request.getHeader("accessToken"));
+        logger.info("preHandle / accessToken [{}]", request.getHeader("AccessToken"));
         if(request.getHeader("accessToken") != null){
             TokenFactory tokenFactory = new TokenFactory();
             String reqTbuserId =  tokenFactory.verifyToken(request.getHeader("accessToken"));

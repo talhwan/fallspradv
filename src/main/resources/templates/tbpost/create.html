@@ -26,6 +26,10 @@ author :
             url: "/api/tbpost",
             type: "POST",
             contentType: 'application/json; charset=utf-8',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Content-type", "application/json");
+                xhr.setRequestHeader("AccessToken", localStorage.getItem("refreshToken"));
+            },
             data: JSON.stringify({
                 title: $("#create_tbpost_title").val()
                 , content: $("#create_tbpost_content").val()
