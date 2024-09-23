@@ -26,7 +26,9 @@ public class TbuserRestController {
     }
 
     @PostMapping("/access")
-    public ResponseEntity<TbuserDto.CreateResDto> access(@Valid @RequestBody String refreshToken) throws Exception {
+    public ResponseEntity<TbuserDto.CreateResDto> access(HttpServletRequest request) throws Exception {
+        String refreshToken = request.getHeader("refreshToken");
+        System.out.println("11111 : " + refreshToken);
         return ResponseEntity.status(HttpStatus.OK).body(tbuserService.access(refreshToken));
     }
 

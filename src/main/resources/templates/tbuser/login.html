@@ -75,6 +75,7 @@ refreshToken :
                     alert(JSON.stringify(obj_data));
 
                     $("#create_tbuser_refreshToken").val(obj_data["id"]);
+                    localStorage.setItem("refreshToken", obj_data["id"]);
 
                     //generateAccessToken(obj_data["id"]);
                     //location.replace("/index");
@@ -92,10 +93,16 @@ refreshToken :
             url: "/api/tbuser/access",
             type: "POST",
             contentType : 'application/json; charset=utf-8',
-            data: $("#create_tbuser_refreshToken").val(),
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Content-type", "application/json");
+                xhr.setRequestHeader("RefreshToken", localStorage.getItem("refreshToken"));
+            },
+            data: {},
             cache: false,
             success: (obj_data, status, xhr)=>{
-                alert(JSON.stringify(obj_data));
+                //alert(JSON.stringify(obj_data));
+                let accessToken = obj_data["id"];
+                localStorage.setItem("accessToken", accessToken);
             },
             error: (obj_data, status, xhr)=>{
                 alert("error!!");

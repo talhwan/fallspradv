@@ -4,8 +4,9 @@ import java.util.Arrays;
 
 public class TokenFactory {
     String temp_key = "12345678901234567890123456789012";
-    int intervalRefreshToken = 600;
-    int intervalAccessToken = 60;
+    String prefix = "Bearer/u0020";
+    int intervalRefreshToken = 1209600;
+    int intervalAccessToken = 1800;
 
     public String issueRefreshToken(String tbuserId){
         return generateToken(tbuserId, intervalRefreshToken);
@@ -14,7 +15,7 @@ public class TokenFactory {
         return generateToken(verifyToken(refreshToken), intervalAccessToken);
     }
 
-    public String generateToken(String tbuserId, int second){
+    public String generateToken(String claim, int second){
         String returnVal = "";
         // 저장해야 하는 정보
         // 유저 아이디값, 만료일.
@@ -23,18 +24,23 @@ public class TokenFactory {
         try{
             NowDate now = new NowDate();
             String due = now.getDue(second);
-            System.out.println("tbuserId : " + tbuserId);
+            System.out.println("claim : " + claim);
             System.out.println("due : " + due);
-            returnVal = aes.AES_Encode(temp_key, tbuserId + "_" + due);
+            returnVal = aes.AES_Encode(temp_key, claim + "_" + due);
         } catch (Exception e){
             System.out.println("error....");
         }
-        return returnVal;
+        return prefix + returnVal;
     }
     public String verifyToken(String token) throws Exception {
         String returnVal = "";
         AES256Cipher aes = new AES256Cipher();
         try{
+            if(!token.startsWith(prefix)){
+                throw new Exception("token does not start with prefix");
+            }
+            token = token.substring(prefix.length());
+            System.out.println("token : " + token);
             // id_만료일
             returnVal = aes.AES_Decode(temp_key, token);
         } catch (Exception e){

@@ -1,5 +1,6 @@
 package com.thc.fallspradv.interceptor;
 
+import com.thc.fallspradv.util.TokenFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -15,10 +16,19 @@ public class DefaultInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         logger.info("preHandle / request [{}]", request);
-        request.setAttribute("reqTest", "done");
+        /*request.setAttribute("reqTest", "done");
         response.setHeader("resTest", "done1");
         logger.info("preHandle / reqTest [{}]", request.getAttribute("reqTest"));
         logger.info("preHandle / resTest [{}]", response.getHeader("resTest"));
+        */
+        //logger.info("preHandle / refreshToken [{}]", request.getHeader("refreshToken"));
+        logger.info("preHandle / accessToken [{}]", request.getHeader("accessToken"));
+        if(request.getHeader("accessToken") != null){
+            TokenFactory tokenFactory = new TokenFactory();
+            String reqTbuserId =  tokenFactory.verifyToken(request.getHeader("accessToken"));
+            request.setAttribute("reqTbuserId", reqTbuserId);
+        }
+        //logger.info("preHandle / refreshToken [{}]", response.getHeader("refreshToken"));
 
         String requestURI = request.getRequestURI();
         String requestMethod = request.getMethod();

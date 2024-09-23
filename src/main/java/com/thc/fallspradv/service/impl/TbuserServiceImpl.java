@@ -50,9 +50,10 @@ public class TbuserServiceImpl implements TbuserService {
     public TbuserDto.CreateResDto access(String param) throws Exception {
         //리프레쉬 토큰으로 유효한지 확인
         TokenFactory tokenFactory = new TokenFactory();
-        String tbuserId = tokenFactory.issueAccessToken(param);
-        
-        return null;
+        String accessToken = tokenFactory.issueAccessToken(param);
+        System.out.println("accessToken : " + accessToken);
+
+        return TbuserDto.CreateResDto.builder().id(accessToken).build();
     }
     @Override
     public TbuserDto.CreateResDto logout(DefaultDto.DetailReqDto param){
