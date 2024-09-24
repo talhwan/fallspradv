@@ -73,6 +73,8 @@ public class TbpostDto {
         private String author;
         @Schema(description = "tbuserId", example="")
         private String tbuserId;
+        @Schema(description = "tbuserUsername", example="")
+        private String tbuserUsername;
         @Schema(description = "tbuserName", example="")
         private String tbuserName;
     }
@@ -108,6 +110,12 @@ public class TbpostDto {
     public static class ScrollListReqDto extends DefaultDto.ScrollListReqDto{
         @Schema(description = "title", example="")
         private String title;
+        @Schema(description = "tbuserId", example="")
+        private String tbuserId;
+        @Schema(description = "tbuserUsername", example="")
+        private String tbuserUsername;
+
+        private String reqTbuserId;
     }
 
 }

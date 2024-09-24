@@ -14,6 +14,7 @@
 			,tbpost.content
 			,tbpost.author
 			,tbpost.tbuser_id as tbuserId
+			, tbuser.username as tbuserUsername
 			, tbuser.name as tbuserName
 		FROM tbpost, tbuser
 		WHERE tbpost.id = #{id}
@@ -31,11 +32,13 @@
 
 	<select id="scrollList" parameterType="hashMap" resultType="com.thc.fallspradv.dto.TbpostDto$DetailResDto">
 		SELECT tbpost.id
-		FROM tbpost
-		WHERE tbpost.id is not NULL
+		FROM tbpost, tbuser
+		WHERE tbpost.tbuser_id = tbuser.id
 		<if test = "deleted != null and deleted !=''">AND tbpost.deleted = #{deleted}</if>
 		<if test = "process != null and process !=''">AND tbpost.process = #{process}</if>
 		<if test = "title != null and title !=''">AND tbpost.title LIKE CONCAT('%', #{title}, '%')</if>
+		<if test = "tbuserId != null and tbuserId !=''">AND tbpost.tbuser_id = #{tbuserId}</if>
+		<if test = "tbuserUsername != null and tbuserUsername !=''">AND tbuser.username = #{tbuserUsername}</if>
 
 		<if test = "orderby =='created_at'">
 			<if test = "orderway =='desc'">

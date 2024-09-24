@@ -97,8 +97,8 @@ public class TbpostRestController {
     public ResponseEntity<List<TbpostDto.DetailResDto>> mlist(@Valid TbpostDto.ScrollListReqDto param
             , HttpServletRequest request, HttpServletResponse response
     ){
-        logger.info("reqTest : " + request.getAttribute("reqTest"));
-        logger.info("resTest : " + response.getHeader("resTest"));
+        logger.info("reqTbuserId : " + request.getAttribute("reqTbuserId"));
+        param.setReqTbuserId(request.getAttribute("reqTbuserId") + "");
         return ResponseEntity.status(HttpStatus.OK).body(tbpostService.scrollList(param));
     }
 

@@ -23,9 +23,9 @@ public class DefaultInterceptor implements HandlerInterceptor {
         */
         //logger.info("preHandle / refreshToken [{}]", request.getHeader("refreshToken"));
         logger.info("preHandle / accessToken [{}]", request.getHeader("AccessToken"));
-        if(request.getHeader("accessToken") != null){
+        if(request.getHeader("AccessToken") != null){
             TokenFactory tokenFactory = new TokenFactory();
-            String reqTbuserId =  tokenFactory.verifyToken(request.getHeader("accessToken"));
+            String reqTbuserId =  tokenFactory.verifyToken(request.getHeader("AccessToken"));
             request.setAttribute("reqTbuserId", reqTbuserId);
         }
         //logger.info("preHandle / refreshToken [{}]", response.getHeader("refreshToken"));

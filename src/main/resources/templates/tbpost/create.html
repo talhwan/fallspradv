@@ -28,7 +28,7 @@ author :
             contentType: 'application/json; charset=utf-8',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Content-type", "application/json");
-                xhr.setRequestHeader("AccessToken", localStorage.getItem("refreshToken"));
+                xhr.setRequestHeader("AccessToken", localStorage.getItem("accessToken"));
             },
             data: JSON.stringify({
                 title: $("#create_tbpost_title").val()

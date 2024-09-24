@@ -13,10 +13,10 @@
     {{#resultData_tbpost}}
     <tr class="gradeA">
         <td><font class="font_deleted_{{deleted}} chk_deleted_{{id}}">{{deleted}}</font></td>
-        <td>{{tbuserNick}}</td>
+        <td>{{tbuserName}}// {{tbuserUsername}}</td>
         <td><a href="/tbpost/detail/{{id}}">{{title}}</a></td>
-        <td>{{liked}}</td>
-        <td>{{countread}}</td>
+        <!--<td>{{liked}}</td>
+        <td>{{countread}}</td>-->
         <td>{{createdAt}} / {{modifiedAt}}
         <input type="hidden" class="input_tbpost_created_at" value="{{createdAt}}"/>
         <input type="hidden" class="input_tbpost_title" value="{{title}}"/>
@@ -35,10 +35,15 @@ deleted :
     <option value="N">일반</option>
     <option value="Y">삭제</option>
 </select>
-tbuserId :
-<input id="detail_tbpost_tbuserId" type="text" onchange="listener_search_changed(this);">
+<!--tbuserId :
+<input id="detail_tbpost_tbuserId" type="text" onchange="listener_search_changed(this);">-->
 title :
 <input id="detail_tbpost_title" type="text" onchange="listener_search_changed(this);">
+작성자 (인덱스id)
+<input id="detail_tbpost_tbuserId" type="text" onchange="listener_search_changed(this);" />
+작성자(사용자id)
+<input id="detail_tbpost_tbuserUsername" type="text" onchange="listener_search_changed(this);" />
+<!--<input type="checkbox" id="input_tbpost_my" />-->
 
 <button onclick="mlist_tbpost()">list</button>
 
@@ -76,8 +81,8 @@ title :
                 <th>삭제여부</th>
                 <th>작성자</th>
                 <th>제목</th>
-                <th>좋아요</th>
-                <th>조회수</th>
+                <!--<th>좋아요</th>
+                <th>조회수</th>-->
                 <th>일시</th>
             </tr>
         </thead>
@@ -121,6 +126,10 @@ title :
         $.ajax({
             url: "/api/tbpost/mlist",
             type: "GET",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Content-type", "application/json");
+                xhr.setRequestHeader("AccessToken", localStorage.getItem("accessToken"));
+            },
             contentType : 'application/json; charset=utf-8',
             data: {
                 deleted : $("#detail_tbpost_deleted").val()
@@ -131,7 +140,10 @@ title :
                 , tbuserId : $("#detail_tbpost_tbuserId").val()
                 , title : $("#detail_tbpost_title").val()
 
-                ,tbuserId : localStorage.getItem("myTbuserId")
+                ,tbuserId : $("#detail_tbpost_tbuserId").val()
+                ,tbuserUsername : $("#detail_tbpost_tbuserUsername").val()
+                /*
+                */
             },
             cache: false,
             success: (data, status, xhr)=>{

@@ -1,10 +1,12 @@
 package com.thc.fallspradv.service.impl;
 
 import com.thc.fallspradv.domain.Tbpost;
+import com.thc.fallspradv.domain.Tbuser;
 import com.thc.fallspradv.dto.DefaultDto;
 import com.thc.fallspradv.dto.TbpostDto;
 import com.thc.fallspradv.mapper.TbpostMapper;
 import com.thc.fallspradv.repository.TbpostRepository;
+import com.thc.fallspradv.repository.TbuserRepository;
 import com.thc.fallspradv.service.TbpostService;
 import com.thc.fallspradv.util.AES256Cipher;
 import org.slf4j.Logger;
@@ -21,12 +23,15 @@ public class TbpostServiceImpl implements TbpostService {
 
     private final TbpostRepository tbpostRepository;
     private final TbpostMapper tbpostMapper;
+    private final TbuserRepository tbuserRepository;
     public TbpostServiceImpl(
             TbpostRepository tbpostRepository
             , TbpostMapper tbpostMapper
+            , TbuserRepository tbuserRepository
     ) {
         this.tbpostRepository = tbpostRepository;
         this.tbpostMapper = tbpostMapper;
+        this.tbuserRepository = tbuserRepository;
     }
 
     /**/
@@ -73,6 +78,18 @@ public class TbpostServiceImpl implements TbpostService {
     @Override
     public List<TbpostDto.DetailResDto> scrollList(TbpostDto.ScrollListReqDto param){
         param.init();
+        //혹시 내 글만 보고자 할때는 이렇게 바꿔줍시다!
+        if("my".equals(param.getTbuserId())){
+            param.setTbuserId(param.getReqTbuserId());
+        }
+        //혹시 유저 id 몰라서 유저 username 넣는 애들도 있겠지?
+        if(param.getTbuserId() != null && !"".equals(param.getTbuserId())){
+            Tbuser tbuser = tbuserRepository.findByUsername(param.getTbuserId());
+            if(tbuser != null){
+                param.setTbuserId(tbuser.getId());
+            }
+        }
+
         return detailList(tbpostMapper.scrollList(param));
     }
 
