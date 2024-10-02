@@ -60,7 +60,7 @@ refreshToken :
 <script>
     function login(){
         $.ajax({
-            url: "/api/tbuser/login",
+            url: "/api/login",
             type: "POST",
             contentType : 'application/json; charset=utf-8',
             data: JSON.stringify({
@@ -69,7 +69,12 @@ refreshToken :
             }),
             cache: false,
             success: (obj_data, status, xhr)=>{
-                if(obj_data["id"] === "not matched"){
+                let refreshToken = xhr.getResponseHeader("RefreshToken");
+                localStorage.setItem("refreshToken", refreshToken);
+                $("#create_tbuser_refreshToken").val(refreshToken);
+
+
+                /*if(obj_data["id"] === "not matched"){
                     alert("아이디와 비밀번호가 올바르지 않습니다.");
                 } else {
                     alert(JSON.stringify(obj_data));
@@ -79,7 +84,7 @@ refreshToken :
 
                     //generateAccessToken(obj_data["id"]);
                     //location.replace("/index");
-                }
+                }*/
                 //alert(JSON.stringify(data));
             },
             error: (obj_data, status, xhr)=>{
@@ -100,9 +105,17 @@ refreshToken :
             data: {},
             cache: false,
             success: (obj_data, status, xhr)=>{
-                //alert(JSON.stringify(obj_data));
+                alert(JSON.stringify(obj_data));
+
+                /*
+                let accessToken = xhr.getResponseHeader("Authorization");
+                alert(JSON.stringify(accessToken));
+                localStorage.setItem("Authorization", accessToken);
+                */
+
                 let accessToken = obj_data["id"];
-                localStorage.setItem("accessToken", accessToken);
+                localStorage.setItem("Authorization", accessToken);
+
             },
             error: (obj_data, status, xhr)=>{
                 alert("error!!");

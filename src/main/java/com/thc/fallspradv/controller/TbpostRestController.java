@@ -2,6 +2,7 @@ package com.thc.fallspradv.controller;
 
 import com.thc.fallspradv.dto.DefaultDto;
 import com.thc.fallspradv.dto.TbpostDto;
+import com.thc.fallspradv.security.PrincipalDetails;
 import com.thc.fallspradv.service.TbpostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,10 +41,19 @@ public class TbpostRestController {
                     + "@return HttpStatus.CREATED(201) ResponseEntity\\<TbpostDto.CreateResDto\\> <br />"
                     + "@exception 필수 파라미터 누락하였을 때 등 <br />"
     )
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("")
-    public ResponseEntity<TbpostDto.CreateResDto> create(@Valid @RequestBody TbpostDto.CreateReqDto param, HttpServletRequest request){
-        logger.info("reqTbuserId : " + request.getAttribute("reqTbuserId"));
-        param.setTbuserId(request.getAttribute("reqTbuserId") + "");
+    public ResponseEntity<TbpostDto.CreateResDto> create(@Valid @RequestBody TbpostDto.CreateReqDto param,
+                                                         HttpServletRequest request,
+        @AuthenticationPrincipal PrincipalDetails principalDetails
+    ){
+        //logger.info("reqTbuserId : " + request.getAttribute("reqTbuserId"));
+        //logger.info("reqTbuserId : " + request.getAttribute("reqTbuserId"));
+        String reqTbuserId = null;
+        if(principalDetails != null){
+            reqTbuserId = principalDetails.getTbuser().getId();
+        }
+        param.setTbuserId(reqTbuserId);
         return ResponseEntity.status(HttpStatus.CREATED).body(tbpostService.create(param));
     }
 
